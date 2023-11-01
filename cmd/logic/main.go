@@ -1,6 +1,11 @@
 package main
 
 import (
+	"net"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"gim/config"
 	"gim/internal/logic/api"
 	"gim/internal/logic/domain/device"
@@ -10,10 +15,6 @@ import (
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/urlwhitelist"
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -43,7 +44,7 @@ func main() {
 		panic(err)
 	}
 
-	logger.Logger.Info("rpc服务已经开启")
+	logger.Logger.Info("rpc服务已经开启", zap.String("addr", config.Config.LogicRPCListenAddr))
 	err = server.Serve(listen)
 	if err != nil {
 		logger.Logger.Error("serve error", zap.Error(err))

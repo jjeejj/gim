@@ -2,16 +2,17 @@ package main
 
 import (
 	"context"
+	"net"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"gim/config"
 	"gim/internal/connect"
 	"gim/pkg/interceptor"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"google.golang.org/grpc"
 
@@ -52,7 +53,7 @@ func main() {
 		panic(err)
 	}
 
-	logger.Logger.Info("rpc服务已经开启")
+	logger.Logger.Info("rpc服务已经开启", zap.String("addr", config.Config.ConnectRPCListenAddr))
 	err = server.Serve(listener)
 	if err != nil {
 		logger.Logger.Error("serve error", zap.Error(err))
