@@ -36,7 +36,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LogicIntClient interface {
-	// 登录
+	// 长链接登录
 	ConnSignIn(ctx context.Context, in *ConnSignInReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 消息同步
 	Sync(ctx context.Context, in *SyncReq, opts ...grpc.CallOption) (*SyncResp, error)
@@ -160,7 +160,7 @@ func (c *logicIntClient) ServerStop(ctx context.Context, in *ServerStopReq, opts
 // All implementations must embed UnimplementedLogicIntServer
 // for forward compatibility
 type LogicIntServer interface {
-	// 登录
+	// 长链接登录
 	ConnSignIn(context.Context, *ConnSignInReq) (*emptypb.Empty, error)
 	// 消息同步
 	Sync(context.Context, *SyncReq) (*SyncResp, error)

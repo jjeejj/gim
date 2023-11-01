@@ -1,8 +1,9 @@
 package device
 
 import (
-	"gim/pkg/protocol/pb"
 	"time"
+
+	"gim/pkg/protocol/pb"
 )
 
 const (
@@ -43,6 +44,7 @@ func (d *Device) ToProto() *pb.Device {
 	}
 }
 
+// IsLegal 设备信息是否合法，只要有没有填写的字段 就是不合法的
 func (d *Device) IsLegal() bool {
 	if d.Type == 0 || d.Brand == "" || d.Model == "" ||
 		d.SystemVersion == "" || d.SDKVersion == "" {

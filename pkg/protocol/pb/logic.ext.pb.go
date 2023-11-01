@@ -75,7 +75,7 @@ type RegisterDeviceReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type          int32  `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"`                                       // 设备类型
+	Type          int32  `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"`                                       // 设备类型，1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
 	Brand         string `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`                                      // 厂商
 	Model         string `protobuf:"bytes,4,opt,name=model,proto3" json:"model,omitempty"`                                      // 机型
 	SystemVersion string `protobuf:"bytes,5,opt,name=system_version,json=systemVersion,proto3" json:"system_version,omitempty"` // 系统版本

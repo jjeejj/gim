@@ -22,6 +22,8 @@
 * 获取群组成员 LogicExt.GetGroupMembers
 * 发送群组消息 LogicExt.SendMessageToGroup
 * 长链接登录 LogicInt.ConnSignIn
-* 房间 
+* 房间（不需要创建的，临时保存到 redis里面的）
 * 订阅房间
 * 推送消息到房间
+
+# 提供的事件回调

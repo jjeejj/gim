@@ -44,7 +44,7 @@ service LogicExt {
 }
 
 message RegisterDeviceReq {
-  int32 type = 2; // 设备类型
+  int32 type = 2; // 设备类型，1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
   string brand = 3; // 厂商
   string model = 4; // 机型
   string system_version = 5; // 系统版本

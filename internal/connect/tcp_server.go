@@ -2,10 +2,11 @@ package connect
 
 import (
 	"context"
+	"time"
+
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"time"
 
 	"github.com/alberliu/gn/codec"
 
@@ -32,7 +33,7 @@ func StartTCPServer(addr string) {
 		logger.Sugar.Error(err)
 		panic(err)
 	}
-
+	logger.Logger.Info("tcp server start")
 	server.Run()
 }
 

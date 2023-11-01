@@ -2,10 +2,11 @@ package device
 
 import (
 	"context"
+	"time"
+
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"time"
 
 	"go.uber.org/zap"
 )
@@ -26,6 +27,7 @@ func (*service) Register(ctx context.Context, device *Device) error {
 
 // SignIn 长连接登录
 func (*service) SignIn(ctx context.Context, userId, deviceId int64, token string, connAddr string, clientAddr string) error {
+	// 验证是否登录
 	_, err := rpc.GetBusinessIntClient().Auth(ctx, &pb.AuthReq{UserId: userId, DeviceId: deviceId, Token: token})
 	if err != nil {
 		return err

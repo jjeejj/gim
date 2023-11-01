@@ -2,9 +2,10 @@ package app
 
 import (
 	"context"
+	"time"
+
 	"gim/internal/business/domain/user/repo"
 	"gim/pkg/protocol/pb"
-	"time"
 )
 
 type userApp struct{}
@@ -38,6 +39,7 @@ func (*userApp) Update(ctx context.Context, userId int64, req *pb.UpdateUserReq)
 	return nil
 }
 
+// GetByIds 根据 id 批量获取用户信息
 func (*userApp) GetByIds(ctx context.Context, userIds []int64) (map[int64]*pb.User, error) {
 	users, err := repo.UserRepo.GetByIds(userIds)
 	if err != nil {

@@ -3,16 +3,17 @@ package api
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
-	"testing"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
 
 func getLogicIntClient() pb.LogicIntClient {
-	conn, err := grpc.Dial("111.229.238.28:50000", grpc.WithInsecure())
+	conn, err := grpc.Dial("127.0.0.1:8010", grpc.WithInsecure())
 	if err != nil {
 		logger.Sugar.Error(err)
 		return nil
@@ -20,15 +21,16 @@ func getLogicIntClient() pb.LogicIntClient {
 	return pb.NewLogicIntClient(conn)
 }
 
-func TestLogicIntServer_SignIn(t *testing.T) {
-	token := ""
+func TestLogicIntServer_SConnSignIn(t *testing.T) {
+	token := "0"
 
 	resp, err := getLogicIntClient().ConnSignIn(context.TODO(),
 		&pb.ConnSignInReq{
-			DeviceId: 1,
-			UserId:   1,
-			Token:    token,
-			ConnAddr: "127.0.0.1:5000",
+			DeviceId:   1,
+			UserId:     1,
+			Token:      token,
+			ConnAddr:   "127.0.0.1:8001",
+			ClientAddr: "127.0.0.1:8999",
 		})
 	if err != nil {
 		logger.Sugar.Error(err)

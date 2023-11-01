@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"gim/internal/business/domain/user/model"
 	"gim/internal/business/domain/user/repo"
 	"gim/pkg/gerrors"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"time"
+	"gim/pkg/util"
 )
 
 type authService struct{}
@@ -15,7 +17,11 @@ type authService struct{}
 var AuthService = new(authService)
 
 // SignIn 登录
-func (*authService) SignIn(ctx context.Context, phoneNumber, code string, deviceId int64) (bool, int64, string, error) {
+// 判断是否是新用户，记录用户信息
+// 判断设备是否存在
+// 生成 token
+// 记录到 redis 缓存中
+func (*authService) SignIn(ctx context.Context, phoneNumber, code string, deviceId int64, sourceCode string) (bool, int64, string, error) {
 	if !Verify(phoneNumber, code) {
 		return false, 0, "", gerrors.ErrBadCode
 	}
@@ -31,6 +37,7 @@ func (*authService) SignIn(ctx context.Context, phoneNumber, code string, device
 			PhoneNumber: phoneNumber,
 			CreateTime:  time.Now(),
 			UpdateTime:  time.Now(),
+			SourceCode:  sourceCode,
 		}
 		err := repo.UserRepo.Save(user)
 		if err != nil {
@@ -43,14 +50,11 @@ func (*authService) SignIn(ctx context.Context, phoneNumber, code string, device
 	if err != nil {
 		return false, 0, "", err
 	}
-
-	// 方便测试
-	token := "0"
-	//token := util.RandString(40)
+	token := util.RandString(40)
 	err = repo.AuthRepo.Set(user.Id, resp.Device.DeviceId, model.Device{
 		Type:   resp.Device.Type,
 		Token:  token,
-		Expire: time.Now().AddDate(0, 3, 0).Unix(),
+		Expire: time.Now().AddDate(0, 3, 0).Unix(), // 默认有效期 3 个月
 	})
 	if err != nil {
 		return false, 0, "", err

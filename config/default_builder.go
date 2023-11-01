@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"google.golang.org/grpc/balancer/roundrobin"
+
 	"gim/pkg/grpclib/picker"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
@@ -13,7 +15,6 @@ import (
 	_ "gim/pkg/grpclib/resolver/addrs"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/balancer/roundrobin"
 )
 
 type defaultBuilder struct{}
@@ -47,7 +48,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewConnectIntClient(conn)
 		},
 		LogicIntClientBuilder: func() pb.LogicIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///docker.for.mac.host.internal:8010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///127.0.0.1:8010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
