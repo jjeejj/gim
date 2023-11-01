@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+
 	"gim/pkg/grpclib/picker"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
@@ -22,9 +23,9 @@ func (*defaultBuilder) Build() Configuration {
 	logger.Target = logger.Console
 
 	return Configuration{
-		MySQL:                "root:gim123456@tcp(111.229.238.28:3306)/gim?charset=utf8&parseTime=true",
-		RedisHost:            "111.229.238.28:6379",
-		RedisPassword:        "alber123456",
+		MySQL:                "root:123456@tcp(192.168.110.238:3306)/gim?charset=utf8&parseTime=true",
+		RedisHost:            "192.168.110.238:6379",
+		RedisPassword:        "",
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
 

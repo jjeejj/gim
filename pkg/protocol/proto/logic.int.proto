@@ -7,7 +7,7 @@ import "logic.ext.proto";
 import "message.ext.proto";
 
 service LogicInt {
-  // 登录
+  // 长链接登录
   rpc ConnSignIn (ConnSignInReq) returns (google.protobuf.Empty);
   // 消息同步
   rpc Sync (SyncReq) returns (SyncResp);

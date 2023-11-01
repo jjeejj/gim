@@ -37,7 +37,7 @@ service LogicExt {
   rpc AddGroupMembers (AddGroupMembersReq) returns (AddGroupMembersResp);
   // 更新群组成员信息
   rpc UpdateGroupMember (UpdateGroupMemberReq) returns (google.protobuf.Empty);
-  // 添加群组成员
+  // 移除群组成员
   rpc DeleteGroupMember (DeleteGroupMemberReq) returns (google.protobuf.Empty);
   // 获取群组成员
   rpc GetGroupMembers (GetGroupMembersReq) returns (GetGroupMembersResp);
