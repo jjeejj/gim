@@ -2,6 +2,8 @@ package entity
 
 import (
 	"context"
+	"time"
+
 	"gim/internal/logic/proxy"
 	"gim/pkg/gerrors"
 	"gim/pkg/grpclib"
@@ -9,7 +11,6 @@ import (
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
 	"gim/pkg/util"
-	"time"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -70,6 +71,7 @@ func CreateGroup(userId int64, in *pb.CreateGroupReq) *Group {
 		Introduction: in.Introduction,
 		Extra:        in.Extra,
 		Members:      make([]GroupUser, 0, len(in.MemberIds)+1),
+		UserNum:      int32(len(in.MemberIds) + 1),
 		CreateTime:   now,
 		UpdateTime:   now,
 	}
@@ -84,7 +86,7 @@ func CreateGroup(userId int64, in *pb.CreateGroupReq) *Group {
 		UpdateType: UpdateTypeUpdate,
 	})
 
-	// 其让人添加为成员
+	// 其他人添加为成员
 	for i := range in.MemberIds {
 		group.Members = append(group.Members, GroupUser{
 			GroupId:    group.Id,

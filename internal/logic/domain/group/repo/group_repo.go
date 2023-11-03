@@ -35,7 +35,7 @@ func (*groupRepo) Get(groupId int64) (*entity.Group, error) {
 	return group, nil
 }
 
-// Save 获取群组信息
+// Save 保存群组信息
 func (*groupRepo) Save(group *entity.Group) error {
 	groupId := group.Id
 	err := GroupDao.Save(group)

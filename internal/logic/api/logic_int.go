@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	"gim/internal/logic/domain/device"
 	"gim/internal/logic/domain/message"
 	"gim/internal/logic/domain/room"
@@ -33,6 +34,7 @@ func (*LogicIntServer) MessageACK(ctx context.Context, req *pb.MessageACKReq) (*
 }
 
 // Offline 设备离线
+// 自由和建立连接的时候客户端地址一致才允许下线
 func (*LogicIntServer) Offline(ctx context.Context, req *pb.OfflineReq) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, device.App.Offline(ctx, req.DeviceId, req.ClientAddr)
 }

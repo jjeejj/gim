@@ -3,11 +3,12 @@ package api
 import (
 	"context"
 	"fmt"
-	"gim/pkg/protocol/pb"
-	"gim/pkg/util"
 	"strconv"
 	"testing"
 	"time"
+
+	"gim/pkg/protocol/pb"
+	"gim/pkg/util"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -27,8 +28,8 @@ func getLogicExtClient() pb.LogicExtClient {
 func getCtx() context.Context {
 	token := "0"
 	return metadata.NewOutgoingContext(context.TODO(), metadata.Pairs(
-		"user_id", "3",
-		"device_id", "3",
+		"user_id", "1",
+		"device_id", "1",
 		"token", token,
 		"request_id", strconv.FormatInt(time.Now().UnixNano(), 10)))
 }
@@ -52,7 +53,7 @@ func TestLogicExtServer_RegisterDevice(t *testing.T) {
 func TestLogicExtServer_SendMessageToFriend(t *testing.T) {
 	resp, err := getLogicExtClient().SendMessageToFriend(getCtx(),
 		&pb.SendMessageReq{
-			ReceiverId: 2,
+			ReceiverId: 1,
 			Content:    []byte("hahaha1000"),
 			SendTime:   util.UnixMilliTime(time.Now()),
 		})
@@ -178,4 +179,16 @@ func TestLogicExtServer_GetGroupMembers(t *testing.T) {
 		return
 	}
 	fmt.Printf("%+v\n", resp)
+}
+
+func TestLogicExtServer_AddFriend(t *testing.T) {
+	_, err := getLogicExtClient().AddFriend(getCtx(), &pb.AddFriendReq{
+		FriendId:    2,
+		Remarks:     "这是第一个好友",
+		Description: "你可以同意吗",
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }

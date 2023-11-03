@@ -1,10 +1,12 @@
 package connect
 
 import (
-	"gim/pkg/protocol/pb"
 	"sync"
+
+	"gim/pkg/protocol/pb"
 )
 
+// ConnsManager 全局链接 map 维护
 var ConnsManager = sync.Map{}
 
 // SetConn 存储
@@ -12,7 +14,7 @@ func SetConn(deviceId int64, conn *Conn) {
 	ConnsManager.Store(deviceId, conn)
 }
 
-// GetConn 获取
+// GetConn 根据设备id获取 对应的连接
 func GetConn(deviceId int64) *Conn {
 	value, ok := ConnsManager.Load(deviceId)
 	if ok {

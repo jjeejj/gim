@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	"gim/internal/logic/domain/device"
 	"gim/internal/logic/domain/friend"
 	"gim/internal/logic/domain/group"
@@ -41,6 +42,8 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 	return &pb.SendMessageResp{Seq: seq}, nil
 }
 
+// AddFriend 添加好友
+// 判断还有是否存在
 func (s *LogicExtServer) AddFriend(ctx context.Context, in *pb.AddFriendReq) (*emptypb.Empty, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -55,6 +58,7 @@ func (s *LogicExtServer) AddFriend(ctx context.Context, in *pb.AddFriendReq) (*e
 	return &emptypb.Empty{}, nil
 }
 
+// AgreeAddFriend  同意好友请求
 func (s *LogicExtServer) AgreeAddFriend(ctx context.Context, in *pb.AgreeAddFriendReq) (*emptypb.Empty, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -106,6 +110,7 @@ func (*LogicExtServer) SendMessageToGroup(ctx context.Context, in *pb.SendMessag
 }
 
 // CreateGroup 创建群组
+// 传的参数 member_ids 是不包含创建人的
 func (*LogicExtServer) CreateGroup(ctx context.Context, in *pb.CreateGroupReq) (*pb.CreateGroupResp, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -133,6 +138,7 @@ func (*LogicExtServer) GetGroup(ctx context.Context, in *pb.GetGroupReq) (*pb.Ge
 }
 
 // GetGroups 获取用户加入的所有群组
+// 不包含群成员信息
 func (*LogicExtServer) GetGroups(ctx context.Context, in *emptypb.Empty) (*pb.GetGroupsResp, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -143,6 +149,7 @@ func (*LogicExtServer) GetGroups(ctx context.Context, in *emptypb.Empty) (*pb.Ge
 	return &pb.GetGroupsResp{Groups: groups}, err
 }
 
+// AddGroupMembers 添加群成员到指定群中
 func (s *LogicExtServer) AddGroupMembers(ctx context.Context, in *pb.AddGroupMembersReq) (*pb.AddGroupMembersResp, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {

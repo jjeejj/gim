@@ -2,11 +2,12 @@ package friend
 
 import (
 	"context"
+	"time"
+
 	"gim/internal/logic/proxy"
 	"gim/pkg/gerrors"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"time"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -54,6 +55,15 @@ func (s *service) List(ctx context.Context, userId int64) ([]*pb.Friend, error) 
 
 // AddFriend 添加好友
 func (*service) AddFriend(ctx context.Context, userId, friendId int64, remarks, description string) error {
+	// 判断添加的好友是否存在
+	friendUserResp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: friendId})
+	if err != nil {
+		return err
+	}
+	if friendUserResp == nil || friendUserResp.User == nil {
+		return gerrors.ErrUserNotFound
+	}
+	// 判断是否已经是好友关系
 	friend, err := Repo.Get(userId, friendId)
 	if err != nil {
 		return err
