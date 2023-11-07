@@ -177,6 +177,7 @@ func (*service) SendToFriend(ctx context.Context, fromDeviceID, fromUserID int64
 		Content:  bytes,
 		SendTime: req.SendTime,
 	}
+	// 给发送着通知
 	seq, err := proxy.MessageProxy.SendToUser(ctx, fromDeviceID, fromUserID, msg, true)
 	if err != nil {
 		return 0, err

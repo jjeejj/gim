@@ -90,7 +90,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `id`           bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `phone_number` varchar(20)   NOT NULL COMMENT '手机号',
+    `phone_number` varchar(256)   NOT NULL COMMENT '手机号(也可以是用户的id)',
     `nickname`     varchar(20)   NOT NULL COMMENT '昵称',
     `sex`          tinyint(4) NOT NULL COMMENT '性别，0:未知；1:男；2:女',
     `avatar_url`   varchar(256)  NOT NULL COMMENT '用户头像链接',

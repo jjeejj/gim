@@ -21,7 +21,7 @@
 * 移除群组成员 LogicExt.DeleteGroupMember
 * 获取群组成员 LogicExt.GetGroupMembers
 * 发送群组消息 LogicExt.SendMessageToGroup
-* 长链接登录 LogicInt.ConnSignIn
+* 长链接登录 LogicInt.ConnSignIn [这个是内部调用的，外部不允许使用]
 * 房间（不需要创建的，临时保存到 redis里面的）
 * 订阅房间
 * 推送消息到房间
