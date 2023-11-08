@@ -12,7 +12,7 @@ type repo struct{}
 var Repo = new(repo)
 
 // Get 获取好友
-func (*repo) Get(userId, friendId int64) (*Friend, error) {
+func (*repo) Get(userId, friendId string) (*Friend, error) {
 	friend := Friend{}
 	err := db.DB.First(&friend, "user_id = ? and friend_id = ?", userId, friendId).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -30,7 +30,7 @@ func (*repo) Save(friend *Friend) error {
 }
 
 // List 获取好友列表
-func (*repo) List(userId int64, status int) ([]Friend, error) {
+func (*repo) List(userId string, status int) ([]Friend, error) {
 	var friends []Friend
 	err := db.DB.Where("user_id = ? and status = ?", userId, status).Find(&friends).Error
 	return friends, gerrors.WrapError(err)

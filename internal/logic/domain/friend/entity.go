@@ -9,8 +9,8 @@ const (
 
 type Friend struct {
 	Id         int64
-	UserId     int64
-	FriendId   int64
+	UserId     string
+	FriendId   string
 	Remarks    string
 	Extra      string
 	Status     int

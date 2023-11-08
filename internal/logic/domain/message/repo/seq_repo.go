@@ -2,6 +2,7 @@ package repo
 
 import (
 	"database/sql"
+
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
 )
@@ -16,7 +17,7 @@ type seqRepo struct{}
 var SeqRepo = new(seqRepo)
 
 // Incr 自增seq,并且获取自增后的值
-func (*seqRepo) Incr(objectType int, objectId int64) (int64, error) {
+func (*seqRepo) Incr(objectType int, objectId string) (int64, error) {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
 

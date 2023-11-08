@@ -2,10 +2,11 @@ package proxy
 
 import (
 	"context"
+	"time"
+
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/util"
-	"time"
 
 	"go.uber.org/zap"
 
@@ -15,10 +16,10 @@ import (
 var MessageProxy messageProxy
 
 type messageProxy interface {
-	SendToUser(ctx context.Context, fromDeviceID, toUserID int64, message *pb.Message, isPersist bool) (int64, error)
+	SendToUser(ctx context.Context, fromDeviceID int64, toUserID string, message *pb.Message, isPersist bool) (int64, error)
 }
 
-func PushToUserBytes(ctx context.Context, toUserID int64, code int32, bytes []byte, isPersist bool) (int64, error) {
+func PushToUserBytes(ctx context.Context, toUserID string, code int32, bytes []byte, isPersist bool) (int64, error) {
 	message := pb.Message{
 		Code:     code,
 		Content:  bytes,
@@ -32,7 +33,7 @@ func PushToUserBytes(ctx context.Context, toUserID int64, code int32, bytes []by
 	return seq, nil
 }
 
-func PushToUser(ctx context.Context, toUserID int64, code pb.PushCode, msg proto.Message, isPersist bool) (int64, error) {
+func PushToUser(ctx context.Context, toUserID string, code pb.PushCode, msg proto.Message, isPersist bool) (int64, error) {
 	bytes, err := proto.Marshal(msg)
 	if err != nil {
 		logger.Logger.Error("PushToUser", zap.Error(err))

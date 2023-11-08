@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+
 	"gim/config"
 	"gim/pkg/protocol/pb"
 )
@@ -33,7 +34,7 @@ func GetBusinessIntClient() pb.BusinessIntClient {
 	return businessIntClient
 }
 
-func GetSender(deviceID, userID int64) (*pb.Sender, error) {
+func GetSender(deviceID int64, userID string) (*pb.Sender, error) {
 	user, err := GetBusinessIntClient().GetUser(context.TODO(), &pb.GetUserReq{UserId: userID})
 	if err != nil {
 		return nil, err

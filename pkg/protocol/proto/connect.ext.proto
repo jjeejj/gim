@@ -32,7 +32,7 @@ message Output {
 // 设备登录,package_type:1
 message SignInInput {
   int64 device_id = 1; // 设备id
-  int64 user_id = 2; // 用户id
+  string user_id = 2; // 用户id
   string token = 3; // 秘钥
 }
 

@@ -3,13 +3,14 @@ package connect
 import (
 	"container/list"
 	"context"
+	"sync"
+	"time"
+
 	"gim/config"
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
-	"sync"
-	"time"
 
 	"go.uber.org/zap"
 
@@ -30,7 +31,7 @@ type Conn struct {
 	TCP      *gn.Conn        // tcp连接
 	WSMutex  sync.Mutex      // WS写锁
 	WS       *websocket.Conn // websocket连接
-	UserId   int64           // 用户ID
+	UserId   string          // 用户的业务ID
 	DeviceId int64           // 设备ID
 	RoomId   int64           // 订阅的房间ID
 	Element  *list.Element   // 链表节点
@@ -107,7 +108,7 @@ func (c *Conn) HandleMessage(bytes []byte) {
 	logger.Logger.Debug("HandleMessage", zap.Any("input", input))
 
 	// 对未登录的用户进行拦截
-	if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == 0 {
+	if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == "" {
 		// 应该告诉用户没有登录
 		return
 	}

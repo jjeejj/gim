@@ -16,19 +16,17 @@ service BusinessExt {
 }
 
 message SignInReq {
-  string phone_number = 1; // 手机号
-  string code = 2; // 验证码
+  string user_id = 1; // 手机号
   int64 device_id = 3; // 设备id
   string source_code = 4; // 用户来源编码
 }
 message SignInResp {
   bool is_new = 1; // 是否是新用户
-  int64 user_id = 2; // 用户id
   string token = 3; // token
 }
 
 message User {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户业务id
   string nickname = 2; // 昵称
   int32 sex = 3; // 性别, 0 未知 1 男 2 女
   string avatar_url = 4; // 头像地址
@@ -36,10 +34,11 @@ message User {
   string source_code = 6; // 用户来源编码
   int64 create_time = 7; // 创建时间
   int64 update_time = 8; // 更新时间
+  int64 id = 9; // 数据库的主键id
 }
 
 message GetUserReq {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户业务id
 }
 message GetUserResp {
   User user = 1; // 用户信息

@@ -2,9 +2,10 @@ package grpclib
 
 import (
 	"context"
+	"strconv"
+
 	"gim/pkg/gerrors"
 	"gim/pkg/logger"
-	"strconv"
 
 	"google.golang.org/grpc/metadata"
 )
@@ -38,37 +39,33 @@ func GetCtxRequestId(ctx context.Context) int64 {
 	return requestId
 }
 
-// GetCtxData 获取ctx的用户数据，依次返回user_id,device_id
-func GetCtxData(ctx context.Context) (int64, int64, error) {
+// GetCtxData 获取ctx的用户数据，依次返回 user_id,device_id
+func GetCtxData(ctx context.Context) (string, int64, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return 0, 0, gerrors.ErrUnauthorized
+		return "", 0, gerrors.ErrUnauthorized
 	}
 
 	var (
-		userId   int64
+		userId   string
 		deviceId int64
 		err      error
 	)
 
-	userIdStrs, ok := md[CtxUserId]
-	if !ok && len(userIdStrs) == 0 {
-		return 0, 0, gerrors.ErrUnauthorized
+	userIds, ok := md[CtxUserId]
+	if !ok && len(userIds) == 0 {
+		return "", 0, gerrors.ErrUnauthorized
 	}
-	userId, err = strconv.ParseInt(userIdStrs[0], 10, 64)
-	if err != nil {
-		logger.Sugar.Error(err)
-		return 0, 0, gerrors.ErrUnauthorized
-	}
+	userId = userIds[0]
 
 	deviceIdStrs, ok := md[CtxDeviceId]
 	if !ok && len(deviceIdStrs) == 0 {
-		return 0, 0, gerrors.ErrUnauthorized
+		return "", 0, gerrors.ErrUnauthorized
 	}
 	deviceId, err = strconv.ParseInt(deviceIdStrs[0], 10, 64)
 	if err != nil {
 		logger.Sugar.Error(err)
-		return 0, 0, gerrors.ErrUnauthorized
+		return "", 0, gerrors.ErrUnauthorized
 	}
 	return userId, deviceId, nil
 }

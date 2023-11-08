@@ -59,12 +59,12 @@ func (*handler) OnClose(c *gn.Conn, err error) {
 	if !ok || conn == nil {
 		return
 	}
-	logger.Logger.Debug("close", zap.String("addr", c.GetAddr()), zap.Int64("user_id", conn.UserId),
+	logger.Logger.Debug("close", zap.String("addr", c.GetAddr()), zap.String("user_id", conn.UserId),
 		zap.Int64("device_id", conn.DeviceId), zap.Error(err))
 
 	DeleteConn(conn.DeviceId)
 
-	if conn.UserId != 0 {
+	if conn.UserId != "" {
 		_, _ = rpc.GetLogicIntClient().Offline(context.TODO(), &pb.OfflineReq{
 			UserId:     conn.UserId,
 			DeviceId:   conn.DeviceId,

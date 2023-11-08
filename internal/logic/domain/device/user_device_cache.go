@@ -1,10 +1,10 @@
 package device
 
 import (
+	"time"
+
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
-	"strconv"
-	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -19,9 +19,9 @@ type userDeviceCache struct{}
 var UserDeviceCache = new(userDeviceCache)
 
 // Get 获取指定用户的所有在线设备
-func (c *userDeviceCache) Get(userId int64) ([]Device, error) {
+func (c *userDeviceCache) Get(userId string) ([]Device, error) {
 	var devices []Device
-	err := db.RedisUtil.Get(UserDeviceKey+strconv.FormatInt(userId, 10), &devices)
+	err := db.RedisUtil.Get(UserDeviceKey+userId, &devices)
 	if err != nil && err != redis.Nil {
 		return nil, gerrors.WrapError(err)
 	}
@@ -33,14 +33,14 @@ func (c *userDeviceCache) Get(userId int64) ([]Device, error) {
 }
 
 // Set 将指定用户的所有在线设备存入缓存
-func (c *userDeviceCache) Set(userId int64, devices []Device) error {
-	err := db.RedisUtil.Set(UserDeviceKey+strconv.FormatInt(userId, 10), devices, UserDeviceExpire)
+func (c *userDeviceCache) Set(userId string, devices []Device) error {
+	err := db.RedisUtil.Set(UserDeviceKey+userId, devices, UserDeviceExpire)
 	return gerrors.WrapError(err)
 }
 
 // Del 删除用户的在线设备列表
-func (c *userDeviceCache) Del(userId int64) error {
-	key := UserDeviceKey + strconv.FormatInt(userId, 10)
+func (c *userDeviceCache) Del(userId string) error {
+	key := UserDeviceKey + userId
 	_, err := db.RedisCli.Del(key).Result()
 	return gerrors.WrapError(err)
 }

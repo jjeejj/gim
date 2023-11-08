@@ -20,7 +20,7 @@ func (*repo) Save(device *Device) error {
 		return err
 	}
 
-	if device.UserId != 0 {
+	if device.UserId != "" {
 		err = UserDeviceCache.Del(device.UserId)
 		if err != nil {
 			return err
@@ -30,7 +30,7 @@ func (*repo) Save(device *Device) error {
 }
 
 // ListOnlineByUserId 获取用户的所有在线设备
-func (*repo) ListOnlineByUserId(userId int64) ([]Device, error) {
+func (*repo) ListOnlineByUserId(userId string) ([]Device, error) {
 	devices, err := UserDeviceCache.Get(userId)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (*repo) UpdateStatusOffline(device Device) error {
 		return err
 	}
 
-	if affected == 1 && device.UserId != 0 {
+	if affected == 1 && device.UserId != "" {
 		err = UserDeviceCache.Del(device.UserId)
 		if err != nil {
 			return err

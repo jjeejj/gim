@@ -14,15 +14,15 @@ type BusinessExtServer struct {
 	pb.UnsafeBusinessExtServer
 }
 
+// SignIn 根据 user_id 进行登录
 func (s *BusinessExtServer) SignIn(ctx context.Context, req *pb.SignInReq) (*pb.SignInResp, error) {
-	isNew, userId, token, err := app2.AuthApp.SignIn(ctx, req.PhoneNumber, req.Code, req.DeviceId, req.SourceCode)
+	isNew, token, err := app2.AuthApp.SignIn(ctx, req.UserId, req.DeviceId, req.SourceCode)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.SignInResp{
-		IsNew:  isNew,
-		UserId: userId,
-		Token:  token,
+		IsNew: isNew,
+		Token: token,
 	}, nil
 }
 

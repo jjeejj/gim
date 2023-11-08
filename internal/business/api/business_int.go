@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	app2 "gim/internal/business/domain/user/app"
 	"gim/pkg/protocol/pb"
 
@@ -22,7 +23,7 @@ func (*BusinessIntServer) GetUser(ctx context.Context, req *pb.GetUserReq) (*pb.
 }
 
 func (*BusinessIntServer) GetUsers(ctx context.Context, req *pb.GetUsersReq) (*pb.GetUsersResp, error) {
-	var userIds = make([]int64, 0, len(req.UserIds))
+	var userIds = make([]string, 0, len(req.UserIds))
 	for k := range req.UserIds {
 		userIds = append(userIds, k)
 	}

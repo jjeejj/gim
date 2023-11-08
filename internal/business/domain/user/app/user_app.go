@@ -12,12 +12,12 @@ type userApp struct{}
 
 var UserApp = new(userApp)
 
-func (*userApp) Get(ctx context.Context, userId int64) (*pb.User, error) {
+func (*userApp) Get(ctx context.Context, userId string) (*pb.User, error) {
 	user, err := repo.UserRepo.Get(userId)
 	return user.ToProto(), err
 }
 
-func (*userApp) Update(ctx context.Context, userId int64, req *pb.UpdateUserReq) error {
+func (*userApp) Update(ctx context.Context, userId string, req *pb.UpdateUserReq) error {
 	u, err := repo.UserRepo.Get(userId)
 	if err != nil {
 		return err
@@ -40,15 +40,15 @@ func (*userApp) Update(ctx context.Context, userId int64, req *pb.UpdateUserReq)
 }
 
 // GetByIds 根据 id 批量获取用户信息
-func (*userApp) GetByIds(ctx context.Context, userIds []int64) (map[int64]*pb.User, error) {
+func (*userApp) GetByIds(ctx context.Context, userIds []string) (map[string]*pb.User, error) {
 	users, err := repo.UserRepo.GetByIds(userIds)
 	if err != nil {
 		return nil, err
 	}
 
-	pbUsers := make(map[int64]*pb.User, len(users))
+	pbUsers := make(map[string]*pb.User, len(users))
 	for i := range users {
-		pbUsers[users[i].Id] = users[i].ToProto()
+		pbUsers[users[i].UserId] = users[i].ToProto()
 	}
 	return pbUsers, nil
 }

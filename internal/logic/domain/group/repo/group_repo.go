@@ -9,7 +9,7 @@ type groupRepo struct{}
 var GroupRepo = new(groupRepo)
 
 // Get 获取群组信息
-func (*groupRepo) Get(groupId int64) (*entity.Group, error) {
+func (*groupRepo) Get(groupId string) (*entity.Group, error) {
 	group, err := GroupCache.Get(groupId)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (*groupRepo) Get(groupId int64) (*entity.Group, error) {
 
 // Save 保存群组信息
 func (*groupRepo) Save(group *entity.Group) error {
-	groupId := group.Id
+	groupId := group.GroupId
 	err := GroupDao.Save(group)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (*groupRepo) Save(group *entity.Group) error {
 
 	members := group.Members
 	for i := range members {
-		members[i].GroupId = group.Id
+		members[i].GroupId = group.GroupId
 		if members[i].UpdateType == entity.UpdateTypeUpdate {
 			err = GroupUserRepo.Save(&(members[i]))
 			if err != nil {
@@ -60,7 +60,7 @@ func (*groupRepo) Save(group *entity.Group) error {
 		}
 	}
 
-	if groupId != 0 {
+	if groupId != "" {
 		err = GroupCache.Del(groupId)
 		if err != nil {
 			return err

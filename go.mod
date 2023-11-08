@@ -8,6 +8,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.1.2
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/json-iterator/go v1.1.12

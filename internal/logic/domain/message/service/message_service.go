@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"gim/internal/logic/domain/message/model"
 	"gim/internal/logic/domain/message/repo"
 	"gim/internal/logic/proxy"
@@ -25,7 +26,7 @@ type messageService struct{}
 var MessageService = new(messageService)
 
 // Sync 消息同步
-func (*messageService) Sync(ctx context.Context, userId, seq int64) (*pb.SyncResp, error) {
+func (*messageService) Sync(ctx context.Context, userId string, seq int64) (*pb.SyncResp, error) {
 	messages, hasMore, err := MessageService.ListByUserIdAndSeq(ctx, userId, seq)
 	if err != nil {
 		return nil, err
@@ -53,7 +54,7 @@ func (*messageService) Sync(ctx context.Context, userId, seq int64) (*pb.SyncRes
 }
 
 // ListByUserIdAndSeq 查询消息
-func (*messageService) ListByUserIdAndSeq(ctx context.Context, userId, seq int64) ([]model.Message, bool, error) {
+func (*messageService) ListByUserIdAndSeq(ctx context.Context, userId string, seq int64) ([]model.Message, bool, error) {
 	var err error
 	if seq == 0 {
 		seq, err = DeviceAckService.GetMaxByUserId(ctx, userId)
@@ -65,10 +66,10 @@ func (*messageService) ListByUserIdAndSeq(ctx context.Context, userId, seq int64
 }
 
 // SendToUser 将消息发送给用户
-func (*messageService) SendToUser(ctx context.Context, fromDeviceID, toUserID int64, message *pb.Message, isPersist bool) (int64, error) {
+func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUserID string, message *pb.Message, isPersist bool) (int64, error) {
 	logger.Logger.Debug("SendToUser",
 		zap.Int64("request_id", grpclib.GetCtxRequestId(ctx)),
-		zap.Int64("to_user_id", toUserID))
+		zap.String("to_user_id", toUserID))
 	var (
 		seq int64 = 0
 		err error

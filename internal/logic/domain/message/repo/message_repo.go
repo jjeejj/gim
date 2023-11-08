@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+
 	"gim/internal/logic/domain/message/model"
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
@@ -13,7 +14,7 @@ type messageRepo struct{}
 
 var MessageRepo = new(messageRepo)
 
-func (*messageRepo) tableName(userId int64) string {
+func (*messageRepo) tableName(userId string) string {
 	return fmt.Sprintf("message")
 }
 
@@ -27,7 +28,7 @@ func (d *messageRepo) Save(message model.Message) error {
 }
 
 // ListBySeq 根据类型和id查询大于序号大于seq的消息
-func (d *messageRepo) ListBySeq(userId, seq, limit int64) ([]model.Message, bool, error) {
+func (d *messageRepo) ListBySeq(userId string, seq, limit int64) ([]model.Message, bool, error) {
 	DB := db.DB.Table(d.tableName(userId)).
 		Where("user_id = ? and seq > ?", userId, seq)
 

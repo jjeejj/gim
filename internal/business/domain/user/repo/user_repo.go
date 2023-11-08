@@ -9,7 +9,7 @@ type userRepo struct{}
 var UserRepo = new(userRepo)
 
 // Get 获取单个用户
-func (*userRepo) Get(userId int64) (*model.User, error) {
+func (*userRepo) Get(userId string) (*model.User, error) {
 	user, err := UserCache.Get(userId)
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (*userRepo) Get(userId int64) (*model.User, error) {
 		return user, nil
 	}
 
-	user, err = UserDao.Get(userId)
+	user, err = UserDao.GetByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -32,12 +32,12 @@ func (*userRepo) Get(userId int64) (*model.User, error) {
 	return user, err
 }
 
-func (*userRepo) GetByPhoneNumber(phoneNumber string) (*model.User, error) {
-	return UserDao.GetByPhoneNumber(phoneNumber)
+func (*userRepo) GetByUserId(userId string) (*model.User, error) {
+	return UserDao.GetByUserId(userId)
 }
 
 // GetByIds 获取多个用户
-func (*userRepo) GetByIds(userIds []int64) ([]model.User, error) {
+func (*userRepo) GetByIds(userIds []string) ([]model.User, error) {
 	return UserDao.GetByIds(userIds)
 }
 
@@ -48,14 +48,14 @@ func (*userRepo) Search(key string) ([]model.User, error) {
 
 // Save 保存用户
 func (*userRepo) Save(user *model.User) error {
-	userId := user.Id
+	userId := user.UserId
 	err := UserDao.Save(user)
 	if err != nil {
 		return err
 	}
 
-	if userId != 0 {
-		err = UserCache.Del(user.Id)
+	if userId != "" {
+		err = UserCache.Del(user.UserId)
 		if err != nil {
 			return err
 		}

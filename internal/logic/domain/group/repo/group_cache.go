@@ -1,11 +1,11 @@
 package repo
 
 import (
+	"time"
+
 	"gim/internal/logic/domain/group/entity"
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
-	"strconv"
-	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -17,9 +17,9 @@ type groupCache struct{}
 var GroupCache = new(groupCache)
 
 // Get 获取群组缓存
-func (c *groupCache) Get(groupId int64) (*entity.Group, error) {
+func (c *groupCache) Get(groupId string) (*entity.Group, error) {
 	var user entity.Group
-	err := db.RedisUtil.Get(GroupKey+strconv.FormatInt(groupId, 10), &user)
+	err := db.RedisUtil.Get(GroupKey+groupId, &user)
 	if err != nil && err != redis.Nil {
 		return nil, gerrors.WrapError(err)
 	}
@@ -31,7 +31,7 @@ func (c *groupCache) Get(groupId int64) (*entity.Group, error) {
 
 // Set 设置群组缓存
 func (c *groupCache) Set(group *entity.Group) error {
-	err := db.RedisUtil.Set(GroupKey+strconv.FormatInt(group.Id, 10), group, 24*time.Hour)
+	err := db.RedisUtil.Set(GroupKey+group.GroupId, group, 24*time.Hour)
 	if err != nil {
 		return gerrors.WrapError(err)
 	}
@@ -39,8 +39,8 @@ func (c *groupCache) Set(group *entity.Group) error {
 }
 
 // Del 删除群组缓存
-func (c *groupCache) Del(groupId int64) error {
-	_, err := db.RedisCli.Del(GroupKey + strconv.FormatInt(groupId, 10)).Result()
+func (c *groupCache) Del(groupId string) error {
+	_, err := db.RedisCli.Del(GroupKey + groupId).Result()
 	if err != nil {
 		return gerrors.WrapError(err)
 	}

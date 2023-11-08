@@ -2,6 +2,7 @@ package device
 
 import (
 	"context"
+
 	"gim/pkg/gerrors"
 	"gim/pkg/protocol/pb"
 )
@@ -34,7 +35,7 @@ func (*app) Register(ctx context.Context, in *pb.RegisterDeviceReq) (int64, erro
 }
 
 // SignIn 登录
-func (*app) SignIn(ctx context.Context, userId, deviceId int64, token string, connAddr string, clientAddr string) error {
+func (*app) SignIn(ctx context.Context, userId string, deviceId int64, token string, connAddr string, clientAddr string) error {
 	return Service.SignIn(ctx, userId, deviceId, token, connAddr, clientAddr)
 }
 
@@ -61,7 +62,7 @@ func (*app) Offline(ctx context.Context, deviceId int64, clientAddr string) erro
 }
 
 // ListOnlineByUserId 获取用户所有在线设备
-func (*app) ListOnlineByUserId(ctx context.Context, userId int64) ([]*pb.Device, error) {
+func (*app) ListOnlineByUserId(ctx context.Context, userId string) ([]*pb.Device, error) {
 	return Service.ListOnlineByUserId(ctx, userId)
 }
 

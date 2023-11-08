@@ -1,10 +1,11 @@
 package repo
 
 import (
+	"time"
+
 	"gim/internal/business/domain/user/model"
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
-	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -46,10 +47,10 @@ func (*userDao) Save(user *model.User) error {
 	return nil
 }
 
-// GetByPhoneNumber 根据手机号获取用户信息
-func (*userDao) GetByPhoneNumber(phoneNumber string) (*model.User, error) {
+// GetByUserId 根据用户业务唯一id获取用户信息
+func (*userDao) GetByUserId(userId string) (*model.User, error) {
 	var user model.User
-	err := db.DB.First(&user, "phone_number = ?", phoneNumber).Error
+	err := db.DB.First(&user, "user_id = ?", userId).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, gerrors.WrapError(err)
 	}
@@ -60,9 +61,9 @@ func (*userDao) GetByPhoneNumber(phoneNumber string) (*model.User, error) {
 }
 
 // GetByIds 获取用户信息
-func (*userDao) GetByIds(userIds []int64) ([]model.User, error) {
+func (*userDao) GetByIds(userIds []string) ([]model.User, error) {
 	var users []model.User
-	err := db.DB.Find(&users, "id in (?)", userIds).Error
+	err := db.DB.Find(&users, "user_id in (?)", userIds).Error
 	if err != nil {
 		return nil, gerrors.WrapError(err)
 	}
@@ -73,7 +74,7 @@ func (*userDao) GetByIds(userIds []int64) ([]model.User, error) {
 func (*userDao) Search(key string) ([]model.User, error) {
 	var users []model.User
 	key = "%" + key + "%"
-	err := db.DB.Where("phone_number like ? or nickname like ?", key, key).Find(&users).Error
+	err := db.DB.Where("user_id like ? or nickname like ?", key, key).Find(&users).Error
 	if err != nil {
 		return nil, gerrors.WrapError(err)
 	}

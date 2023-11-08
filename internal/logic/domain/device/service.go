@@ -26,7 +26,7 @@ func (*service) Register(ctx context.Context, device *Device) error {
 }
 
 // SignIn 长连接登录
-func (*service) SignIn(ctx context.Context, userId, deviceId int64, token string, connAddr string, clientAddr string) error {
+func (*service) SignIn(ctx context.Context, userId string, deviceId int64, token string, connAddr string, clientAddr string) error {
 	// 验证是否登录
 	_, err := rpc.GetBusinessIntClient().Auth(ctx, &pb.AuthReq{UserId: userId, DeviceId: deviceId, Token: token})
 	if err != nil {
@@ -52,7 +52,7 @@ func (*service) SignIn(ctx context.Context, userId, deviceId int64, token string
 }
 
 // Auth 权限验证
-func (*service) Auth(ctx context.Context, userId, deviceId int64, token string) error {
+func (*service) Auth(ctx context.Context, userId string, deviceId int64, token string) error {
 	_, err := rpc.GetBusinessIntClient().Auth(ctx, &pb.AuthReq{UserId: userId, DeviceId: deviceId, Token: token})
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (*service) Auth(ctx context.Context, userId, deviceId int64, token string) 
 	return nil
 }
 
-func (*service) ListOnlineByUserId(ctx context.Context, userId int64) ([]*pb.Device, error) {
+func (*service) ListOnlineByUserId(ctx context.Context, userId string) ([]*pb.Device, error) {
 	devices, err := Repo.ListOnlineByUserId(userId)
 	if err != nil {
 		return nil, err

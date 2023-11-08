@@ -13,11 +13,11 @@ type groupUserRepo struct{}
 var GroupUserRepo = new(groupUserRepo)
 
 // ListByUserId 获取用户加入的群组信息
-func (*groupUserRepo) ListByUserId(userId int64) ([]entity.Group, error) {
+func (*groupUserRepo) ListByUserId(userId string) ([]entity.Group, error) {
 	var groups []entity.Group
 	err := db.DB.Select("g.id,g.name,g.avatar_url,g.introduction,g.user_num,g.extra,g.create_time,g.update_time").
 		Table("group_user u").
-		Joins("join `group` g on u.group_id = g.id").
+		Joins("join `group` g on u.group_id = g.group_id").
 		Where("u.user_id = ?", userId).
 		Find(&groups).Error
 	if err != nil {
@@ -27,7 +27,7 @@ func (*groupUserRepo) ListByUserId(userId int64) ([]entity.Group, error) {
 }
 
 // ListUser 获取群组用户信息
-func (*groupUserRepo) ListUser(groupId int64) ([]entity.GroupUser, error) {
+func (*groupUserRepo) ListUser(groupId string) ([]entity.GroupUser, error) {
 	var groupUsers []entity.GroupUser
 	err := db.DB.Find(&groupUsers, "group_id = ?", groupId).Error
 	if err != nil {
@@ -59,7 +59,7 @@ func (*groupUserRepo) Save(groupUser *entity.GroupUser) error {
 }
 
 // Delete 将用户从群组删除
-func (d *groupUserRepo) Delete(groupId int64, userId int64) error {
+func (d *groupUserRepo) Delete(groupId int64, userId string) error {
 	err := db.DB.Exec("delete from group_user where group_id = ? and user_id = ?",
 		groupId, userId).Error
 	if err != nil {

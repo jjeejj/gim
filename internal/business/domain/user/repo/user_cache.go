@@ -1,11 +1,13 @@
 package repo
 
 import (
+	"fmt"
+	"strconv"
+	"time"
+
 	"gim/internal/business/domain/user/model"
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
-	"strconv"
-	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -20,9 +22,9 @@ type userCache struct{}
 var UserCache = new(userCache)
 
 // Get 获取用户缓存
-func (c *userCache) Get(userId int64) (*model.User, error) {
+func (c *userCache) Get(userId string) (*model.User, error) {
 	var user model.User
-	err := db.RedisUtil.Get(UserKey+strconv.FormatInt(userId, 10), &user)
+	err := db.RedisUtil.Get(fmt.Sprintf("%s%s", UserKey, userId), &user)
 	if err != nil && err != redis.Nil {
 		return nil, gerrors.WrapError(err)
 	}
@@ -42,8 +44,8 @@ func (c *userCache) Set(user model.User) error {
 }
 
 // Del 删除用户缓存
-func (c *userCache) Del(userId int64) error {
-	_, err := db.RedisCli.Del(UserKey + strconv.FormatInt(userId, 10)).Result()
+func (c *userCache) Del(userId string) error {
+	_, err := db.RedisCli.Del(fmt.Sprintf("%s%s", UserKey, userId)).Result()
 	if err != nil {
 		return gerrors.WrapError(err)
 	}

@@ -14,7 +14,7 @@ const (
 // Device 设备
 type Device struct {
 	Id            int64     // 设备id
-	UserId        int64     // 用户id
+	UserId        string    // 用户业务id
 	Type          int32     // 设备类型,1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
 	Brand         string    // 手机厂商
 	Model         string    // 机型
@@ -53,14 +53,14 @@ func (d *Device) IsLegal() bool {
 	return true
 }
 
-func (d *Device) Online(userId int64, connAddr string, clientAddr string) {
+func (d *Device) Online(userId string, connAddr string, clientAddr string) {
 	d.UserId = userId
 	d.ConnAddr = connAddr
 	d.ClientAddr = clientAddr
 	d.Status = DeviceOnLine
 }
 
-func (d *Device) Offline(userId int64, connAddr string, clientAddr string) {
+func (d *Device) Offline(userId string, connAddr string, clientAddr string) {
 	d.UserId = userId
 	d.ConnAddr = connAddr
 	d.ClientAddr = clientAddr

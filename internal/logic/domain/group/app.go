@@ -2,6 +2,7 @@ package group
 
 import (
 	"context"
+
 	"gim/internal/logic/domain/group/entity"
 	"gim/internal/logic/domain/group/repo"
 	"gim/pkg/protocol/pb"
@@ -12,7 +13,7 @@ type app struct{}
 var App = new(app)
 
 // CreateGroup 创建群组
-func (*app) CreateGroup(ctx context.Context, userId int64, in *pb.CreateGroupReq) (int64, error) {
+func (*app) CreateGroup(ctx context.Context, userId string, in *pb.CreateGroupReq) (int64, error) {
 	group := entity.CreateGroup(userId, in)
 	err := repo.GroupRepo.Save(group)
 	if err != nil {
@@ -22,7 +23,7 @@ func (*app) CreateGroup(ctx context.Context, userId int64, in *pb.CreateGroupReq
 }
 
 // GetGroup 获取群组信息
-func (*app) GetGroup(ctx context.Context, groupId int64) (*pb.Group, error) {
+func (*app) GetGroup(ctx context.Context, groupId string) (*pb.Group, error) {
 	group, err := repo.GroupRepo.Get(groupId)
 	if err != nil {
 		return nil, err
@@ -32,7 +33,7 @@ func (*app) GetGroup(ctx context.Context, groupId int64) (*pb.Group, error) {
 }
 
 // GetUserGroups 获取用户加入的群组列表
-func (*app) GetUserGroups(ctx context.Context, userId int64) ([]*pb.Group, error) {
+func (*app) GetUserGroups(ctx context.Context, userId string) ([]*pb.Group, error) {
 	groups, err := repo.GroupUserRepo.ListByUserId(userId)
 	if err != nil {
 		return nil, err
@@ -46,7 +47,7 @@ func (*app) GetUserGroups(ctx context.Context, userId int64) ([]*pb.Group, error
 }
 
 // Update 更新群组
-func (*app) Update(ctx context.Context, userId int64, update *pb.UpdateGroupReq) error {
+func (*app) Update(ctx context.Context, userId string, update *pb.UpdateGroupReq) error {
 	group, err := repo.GroupRepo.Get(update.GroupId)
 	if err != nil {
 		return err
@@ -70,7 +71,7 @@ func (*app) Update(ctx context.Context, userId int64, update *pb.UpdateGroupReq)
 }
 
 // AddMembers 添加群组成员
-func (*app) AddMembers(ctx context.Context, userId, groupId int64, userIds []int64) ([]int64, error) {
+func (*app) AddMembers(ctx context.Context, userId, groupId string, userIds []string) ([]string, error) {
 	group, err := repo.GroupRepo.Get(groupId)
 	if err != nil {
 		return nil, err
@@ -109,7 +110,7 @@ func (*app) UpdateMember(ctx context.Context, in *pb.UpdateGroupMemberReq) error
 }
 
 // DeleteMember 删除群组成员
-func (*app) DeleteMember(ctx context.Context, groupId int64, userId int64, optId int64) error {
+func (*app) DeleteMember(ctx context.Context, groupId, userId string, optId string) error {
 	group, err := repo.GroupRepo.Get(groupId)
 	if err != nil {
 		return err
@@ -131,7 +132,7 @@ func (*app) DeleteMember(ctx context.Context, groupId int64, userId int64, optId
 }
 
 // GetMembers 获取群组成员
-func (*app) GetMembers(ctx context.Context, groupId int64) ([]*pb.GroupMember, error) {
+func (*app) GetMembers(ctx context.Context, groupId string) ([]*pb.GroupMember, error) {
 	group, err := repo.GroupRepo.Get(groupId)
 	if err != nil {
 		return nil, err
@@ -140,7 +141,7 @@ func (*app) GetMembers(ctx context.Context, groupId int64) ([]*pb.GroupMember, e
 }
 
 // SendMessage 发送群组消息
-func (*app) SendMessage(ctx context.Context, fromDeviceID, fromUserID int64, req *pb.SendMessageReq) (int64, error) {
+func (*app) SendMessage(ctx context.Context, fromDeviceID int64, fromUserID string, req *pb.SendMessageReq) (int64, error) {
 	group, err := repo.GroupRepo.Get(req.ReceiverId)
 	if err != nil {
 		return 0, err

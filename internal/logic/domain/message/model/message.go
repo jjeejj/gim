@@ -1,15 +1,16 @@
 package model
 
 import (
+	"time"
+
 	"gim/pkg/protocol/pb"
 	"gim/pkg/util"
-	"time"
 )
 
 // Message 消息
 type Message struct {
 	Id        int64     // 自增主键
-	UserId    int64     // 所属类型id
+	UserId    string    // 所属 用户的业务id
 	RequestId int64     // 请求id
 	Code      int32     // 推送码
 	Content   []byte    // 推送内容

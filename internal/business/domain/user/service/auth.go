@@ -21,55 +21,48 @@ var AuthService = new(authService)
 // 判断设备是否存在
 // 生成 token
 // 记录到 redis 缓存中
-func (*authService) SignIn(ctx context.Context, phoneNumber, code string, deviceId int64, sourceCode string) (bool, int64, string, error) {
-	if !Verify(phoneNumber, code) {
-		return false, 0, "", gerrors.ErrBadCode
-	}
+func (*authService) SignIn(ctx context.Context, userId string, deviceId int64, sourceCode string) (bool, string, error) {
 
-	user, err := repo.UserRepo.GetByPhoneNumber(phoneNumber)
+	user, err := repo.UserRepo.GetByUserId(userId)
 	if err != nil {
-		return false, 0, "", err
+		return false, "", err
 	}
 
 	var isNew = false
 	if user == nil {
 		user = &model.User{
-			PhoneNumber: phoneNumber,
-			CreateTime:  time.Now(),
-			UpdateTime:  time.Now(),
-			SourceCode:  sourceCode,
+			UserId:     userId,
+			CreateTime: time.Now(),
+			UpdateTime: time.Now(),
+			SourceCode: sourceCode,
 		}
 		err := repo.UserRepo.Save(user)
 		if err != nil {
-			return false, 0, "", err
+			return false, "", err
 		}
 		isNew = true
 	}
 
 	resp, err := rpc.GetLogicIntClient().GetDevice(ctx, &pb.GetDeviceReq{DeviceId: deviceId})
 	if err != nil {
-		return false, 0, "", err
+		return false, "", err
 	}
 	token := util.RandString(40)
-	err = repo.AuthRepo.Set(user.Id, resp.Device.DeviceId, model.Device{
+	// 业务 user_id
+	err = repo.AuthRepo.Set(user.UserId, resp.Device.DeviceId, model.Device{
 		Type:   resp.Device.Type,
 		Token:  token,
 		Expire: time.Now().AddDate(0, 3, 0).Unix(), // 默认有效期 3 个月
 	})
 	if err != nil {
-		return false, 0, "", err
+		return false, "", err
 	}
 
-	return isNew, user.Id, token, nil
-}
-
-func Verify(phoneNumber, code string) bool {
-	// 假装他成功了
-	return true
+	return isNew, token, nil
 }
 
 // Auth 验证用户是否登录
-func (*authService) Auth(ctx context.Context, userId, deviceId int64, token string) error {
+func (*authService) Auth(ctx context.Context, userId string, deviceId int64, token string) error {
 	device, err := repo.AuthRepo.Get(userId, deviceId)
 	if err != nil {
 		return err

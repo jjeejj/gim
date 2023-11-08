@@ -1,10 +1,11 @@
 package device
 
 import (
+	"time"
+
 	"gim/internal/business/domain/user/model"
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
-	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -38,7 +39,7 @@ func (*dao) Get(deviceId int64) (*Device, error) {
 }
 
 // ListOnlineByUserId 查询用户所有的在线设备
-func (*dao) ListOnlineByUserId(userId int64) ([]Device, error) {
+func (*dao) ListOnlineByUserId(userId string) ([]Device, error) {
 	var devices []Device
 	err := db.DB.Find(&devices, "user_id = ? and status = ?", userId, DeviceOnLine).Error
 	if err != nil {

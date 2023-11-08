@@ -55,7 +55,7 @@ message RegisterDeviceResp {
 }
 
 message SendMessageReq {
-  int64 receiver_id = 1; // 接收者ID，用户ID/群组ID
+  string receiver_id = 1; // 接收者ID，用户ID/群组ID
   bytes content = 2; // 推动内容
   int64 send_time = 3; // 消息发送时间戳，精确到毫秒
 }
@@ -73,30 +73,29 @@ message PushRoomReq{
 }
 
 message AddFriendReq {
-  int64 friend_id = 1; // 用户id
+  string friend_id = 1; // 用户的业务id
   string remarks = 2; // 备注
   string description = 3; // 描述
 }
 
 message AgreeAddFriendReq {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户id
   string remarks = 2; // 备注
 }
 
 message SetFriendReq {
-  int64 friend_id = 1; // 好友id
+  string friend_id = 1; // 好友id
   string remarks = 2; // 备注
   string extra = 8; // 附加字段
 }
 message SetFriendResp {
-  int64 friend_id = 1; // 好友id
+  string friend_id = 1; // 好友id
   string remarks = 2; // 备注
   string extra = 8; // 附加字段
 }
 
 message Friend {
-  int64 user_id = 1; // 用户id
-  string phone_number = 2; // 电话号码
+  string user_id = 1; // 用户业务id
   string nickname = 3; // 昵称
   int32 sex = 4; // 性别
   string avatar_url = 5; // 头像地址
@@ -113,14 +112,14 @@ message CreateGroupReq {
   string avatar_url = 2; // 头像
   string introduction = 3; // 简介
   string extra = 4; // 附加字段
-  repeated int64 member_ids = 5; // 群组成员ID列表
+  repeated string member_ids = 5; // 群组成员ID列表
 }
 message CreateGroupResp {
   int64 group_id = 1; // 群组id
 }
 
 message UpdateGroupReq {
-  int64 group_id = 1; // 群组id
+  string group_id = 1; // 群组的业务id
   string avatar_url = 2; // 头像
   string name = 3; // 名称
   string introduction = 4; // 简介
@@ -128,14 +127,14 @@ message UpdateGroupReq {
 }
 
 message GetGroupReq {
-  int64 group_id = 1;
+  string group_id = 1; // 群组的业务id
 }
 message GetGroupResp {
   Group group = 1;
 }
 
 message Group {
-  int64 group_id = 1; // 群组id
+  string group_id = 1; // 群组的业务id
   string name = 2; // 名称
   string avatar_url = 3; // 头像
   string introduction = 4; // 简介
@@ -143,6 +142,7 @@ message Group {
   string extra = 6; // 附加字段
   int64 create_time = 7; // 创建时间
   int64 update_time = 8; // 更新时间
+  int64 id = 9; // 数据库的主键id, 一般外部不实用
 }
 
 message GetGroupsResp {
@@ -150,11 +150,11 @@ message GetGroupsResp {
 }
 
 message AddGroupMembersReq {
-  int64 group_id = 1; // 群组id
-  repeated int64 user_ids = 2; // 用户id列表
+  string group_id = 1; // 群组的业务id
+  repeated string user_ids = 2; // 用户id列表
 }
 message AddGroupMembersResp {
-  repeated int64 user_ids = 1; // 已经在群组的用户id列表
+  repeated string user_ids = 1; // 已经在群组的用户id列表
 }
 
 enum MemberType {
@@ -164,26 +164,26 @@ enum MemberType {
 }
 
 message UpdateGroupMemberReq {
-  int64 group_id = 1; // 群组id
-  int64 user_id = 2; // 用户id
+  string group_id = 1; // 群组id
+  string user_id = 2; // 用户id
   MemberType member_type = 3; // 成员类型
   string remarks = 4; // 备注
   string extra = 5; // 附加字段
 }
 
 message DeleteGroupMemberReq {
-  int64 group_id = 1; // 群组id
-  int64 user_id = 2; // 用户id
+  string group_id = 1; // 群组id
+  string user_id = 2; // 用户id
 }
 
 message GetGroupMembersReq {
-  int64 group_id = 1;
+  string group_id = 1;
 }
 message GetGroupMembersResp {
   repeated GroupMember members = 1;
 }
 message GroupMember {
-  int64 user_id = 1;
+  string user_id = 1; // 群成员用户id
   string nickname = 2; // 昵称
   int32 sex = 3; // 性别
   string avatar_url = 4; // 头像地址

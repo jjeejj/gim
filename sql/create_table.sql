@@ -4,8 +4,8 @@
 DROP TABLE IF EXISTS `device`;
 CREATE TABLE `device`
 (
-    `id`             bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `user_id`        bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '账户id',
+    `id`             bigint(20) unsigned NOT NULL COMMENT '主键',
+    `user_id`        varchar(512)  NOT NULL COMMENT '用户业务唯一id',
     `type`           tinyint(3) NOT NULL COMMENT '设备类型,1:Android；2：IOS；3：Windows; 4：MacOS；5：Web',
     `brand`          varchar(20) NOT NULL COMMENT '手机厂商',
     `model`          varchar(20) NOT NULL COMMENT '机型',
@@ -29,8 +29,8 @@ DROP TABLE IF EXISTS `friend`;
 CREATE TABLE `friend`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `user_id`     bigint(20) unsigned NOT NULL COMMENT '用户id',
-    `friend_id`   bigint(20) unsigned NOT NULL COMMENT '好友id',
+    `user_id`     varchar(512) NOT NULL COMMENT '用户业务唯一id',
+    `friend_id`   varchar(512) NOT NULL COMMENT '好友用户业务唯一id',
     `remarks`     varchar(20)   NOT NULL COMMENT '备注',
     `extra`       varchar(1024) NOT NULL COMMENT '附加属性',
     `status`      tinyint(4) NOT NULL COMMENT '状态，1：申请，2：同意',
@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS `group`;
 CREATE TABLE `group`
 (
     `id`           bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+    `group_id`     varchar(255)  NOT NULL COMMENT '群组的业务id',
     `name`         varchar(50)   NOT NULL COMMENT '群组名称',
     `avatar_url`   varchar(255)  NOT NULL COMMENT '群组头像',
     `introduction` varchar(255)  NOT NULL COMMENT '群组简介',
@@ -56,7 +57,8 @@ CREATE TABLE `group`
     `extra`        varchar(1024) NOT NULL COMMENT '附加属性',
     `create_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_group_id` (`group_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='群组';
@@ -68,8 +70,8 @@ DROP TABLE IF EXISTS `group_user`;
 CREATE TABLE `group_user`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `group_id`    bigint(20) unsigned NOT NULL COMMENT '组id',
-    `user_id`     bigint(20) unsigned NOT NULL COMMENT '用户id',
+    `group_id`    varchar(255)  NOT NULL COMMENT '群组的业务id',
+    `user_id`      varchar(512)  NOT NULL COMMENT '用户业务唯一id',
     `member_type` tinyint(4) NOT NULL COMMENT '成员类型，1：管理员；2：普通成员',
     `remarks`     varchar(20)   NOT NULL COMMENT '备注',
     `extra`       varchar(1024) NOT NULL COMMENT '附加属性',
@@ -90,7 +92,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `id`           bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `phone_number` varchar(256)   NOT NULL COMMENT '手机号(也可以是用户的id)',
+    `user_id`      varchar(512) NOT NULL COMMENT '用户业务唯一id',
     `nickname`     varchar(20)   NOT NULL COMMENT '昵称',
     `sex`          tinyint(4) NOT NULL COMMENT '性别，0:未知；1:男；2:女',
     `avatar_url`   varchar(256)  NOT NULL COMMENT '用户头像链接',
@@ -99,7 +101,7 @@ CREATE TABLE `user`
     `create_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_phone_number` (`phone_number`)
+    UNIQUE KEY `uk_user_id` (`user_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='用户';
@@ -108,7 +110,7 @@ CREATE TABLE `seq`
 (
     `id`          bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `object_type` tinyint  NOT NULL COMMENT '对象类型,1:用户；2：群组',
-    `object_id`   bigint unsigned NOT NULL COMMENT '对象id',
+    `object_id`   varchar(256) NOT NULL COMMENT '对象id',
     `seq`         bigint unsigned NOT NULL COMMENT '序列号',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -124,8 +126,8 @@ DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `user_id`     bigint(20) unsigned NOT NULL COMMENT '所属类型的id',
-    `request_id`  bigint(20) NOT NULL COMMENT '请求id',
+    `user_id`     varchar(512) NOT NULL COMMENT '用户业务唯一id',
+    `request_id`  bigint(20) NOT NULL COMMENT '请求(消息)id',
     `code`        tinyint(4) NOT NULL COMMENT '消息类型',
     `content`     blob     NOT NULL COMMENT '消息内容',
     `seq`         bigint(20) unsigned NOT NULL COMMENT '消息序列号',

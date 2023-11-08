@@ -32,14 +32,14 @@ service LogicInt {
 
 message ConnSignInReq {
   int64 device_id = 1; // 设备id
-  int64 user_id = 2; // 用户id
+  string user_id = 2; // 用户业务id
   string token = 3; // 秘钥
   string conn_addr = 4; // 服务器地址
   string client_addr = 5; // 客户端地址
 }
 
 message SyncReq {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户id
   int64 device_id = 2; // 设备id
   int64 seq = 3; // 客户端已经同步的序列号
 }
@@ -49,20 +49,20 @@ message SyncResp {
 }
 
 message MessageACKReq {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户id
   int64 device_id = 2; // 设备id
   int64 device_ack = 3; // 设备收到消息的确认号
   int64 receive_time = 4; // 消息接收时间戳，精确到毫秒
 }
 
 message OfflineReq {
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户id
   int64 device_id = 2; // 设备id
   string client_addr = 3; // 客户端地址
 }
 
 message SubscribeRoomReq{
-  int64 user_id = 1; // 用户id
+  string user_id = 1; // 用户id
   int64 device_id = 2; // 设备id
   int64 room_id = 3; // 房间id
   int64 seq = 4; // 消息序列号
@@ -70,7 +70,7 @@ message SubscribeRoomReq{
 }
 
 message PushReq{
-  int64 user_id = 1; // 用户ID
+  string user_id = 1; // 用户ID
   int32 code = 2; // 推送码
   bytes content = 3; // 推送内容
   bool is_persist = 4; // 是否持久化
@@ -93,7 +93,7 @@ message GetDeviceResp {
 
 message Device {
   int64 device_id = 1; // 设备id
-  int64 user_id = 2; // 用户id
+  string user_id = 2; // 用户id
   int32 type = 3; // 设备类型,1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
   string brand = 4; // 手机厂商
   string model = 5; // 机型

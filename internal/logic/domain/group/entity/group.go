@@ -2,7 +2,10 @@ package entity
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 
 	"gim/internal/logic/proxy"
 	"gim/pkg/gerrors"
@@ -23,6 +26,7 @@ const (
 // Group 群组
 type Group struct {
 	Id           int64       // 群组id
+	GroupId      string      // 群组的业务id
 	Name         string      // 组名
 	AvatarUrl    string      // 头像
 	Introduction string      // 群简介
@@ -35,8 +39,8 @@ type Group struct {
 
 type GroupUser struct {
 	Id         int64     // 自增主键
-	GroupId    int64     // 群组id
-	UserId     int64     // 用户id
+	GroupId    string    // 群组id
+	UserId     string    // 用户id
 	MemberType int       // 群组类型
 	Remarks    string    // 备注
 	Extra      string    // 附加属性
@@ -52,7 +56,8 @@ func (g *Group) ToProto() *pb.Group {
 	}
 
 	return &pb.Group{
-		GroupId:      g.Id,
+		Id:           g.Id,
+		GroupId:      g.GroupId,
 		Name:         g.Name,
 		AvatarUrl:    g.AvatarUrl,
 		Introduction: g.Introduction,
@@ -63,9 +68,10 @@ func (g *Group) ToProto() *pb.Group {
 	}
 }
 
-func CreateGroup(userId int64, in *pb.CreateGroupReq) *Group {
+func CreateGroup(userId string, in *pb.CreateGroupReq) *Group {
 	now := time.Now()
 	group := &Group{
+		GroupId:      fmt.Sprintf("%s%s", "group", uuid.New().String()),
 		Name:         in.Name,
 		AvatarUrl:    in.AvatarUrl,
 		Introduction: in.Introduction,
@@ -78,7 +84,7 @@ func CreateGroup(userId int64, in *pb.CreateGroupReq) *Group {
 
 	// 创建者添加为管理员
 	group.Members = append(group.Members, GroupUser{
-		GroupId:    group.Id,
+		GroupId:    group.GroupId,
 		UserId:     userId,
 		MemberType: int(pb.MemberType_GMT_ADMIN),
 		CreateTime: now,
@@ -89,7 +95,7 @@ func CreateGroup(userId int64, in *pb.CreateGroupReq) *Group {
 	// 其他人添加为成员
 	for i := range in.MemberIds {
 		group.Members = append(group.Members, GroupUser{
-			GroupId:    group.Id,
+			GroupId:    group.GroupId,
 			UserId:     in.MemberIds[i],
 			MemberType: int(pb.MemberType_GMT_MEMBER),
 			CreateTime: now,
@@ -108,7 +114,7 @@ func (g *Group) Update(ctx context.Context, in *pb.UpdateGroupReq) error {
 	return nil
 }
 
-func (g *Group) PushUpdate(ctx context.Context, userId int64) error {
+func (g *Group) PushUpdate(ctx context.Context, userId string) error {
 	userResp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: userId})
 	if err != nil {
 		return err
@@ -128,7 +134,7 @@ func (g *Group) PushUpdate(ctx context.Context, userId int64) error {
 }
 
 // SendMessage 消息发送至群组
-func (g *Group) SendMessage(ctx context.Context, fromDeviceID, fromUserID int64, req *pb.SendMessageReq) (int64, error) {
+func (g *Group) SendMessage(ctx context.Context, fromDeviceID int64, fromUserID string, req *pb.SendMessageReq) (int64, error) {
 	if !g.IsMember(fromUserID) {
 		logger.Sugar.Error(ctx, fromUserID, req.ReceiverId, "不在群组内")
 		return 0, gerrors.ErrNotInGroup
@@ -179,7 +185,7 @@ func (g *Group) SendMessage(ctx context.Context, fromDeviceID, fromUserID int64,
 	return userSeq, nil
 }
 
-func (g *Group) IsMember(userId int64) bool {
+func (g *Group) IsMember(userId string) bool {
 	for i := range g.Members {
 		if g.Members[i].UserId == userId {
 			return true
@@ -206,7 +212,7 @@ func (g *Group) PushMessage(ctx context.Context, code pb.PushCode, message proto
 // GetMembers 获取群组用户
 func (g *Group) GetMembers(ctx context.Context) ([]*pb.GroupMember, error) {
 	members := g.Members
-	userIds := make(map[int64]int32, len(members))
+	userIds := make(map[string]int32, len(members))
 	for i := range members {
 		userIds[members[i].UserId] = 0
 	}
@@ -238,9 +244,9 @@ func (g *Group) GetMembers(ctx context.Context) ([]*pb.GroupMember, error) {
 }
 
 // AddMembers 给群组添加用户
-func (g *Group) AddMembers(ctx context.Context, userIds []int64) ([]int64, []int64, error) {
-	var existIds []int64
-	var addedIds []int64
+func (g *Group) AddMembers(ctx context.Context, userIds []string) ([]string, []string, error) {
+	var existIds []string
+	var addedIds []string
 
 	now := time.Now()
 	for i, userId := range userIds {
@@ -250,7 +256,7 @@ func (g *Group) AddMembers(ctx context.Context, userIds []int64) ([]int64, []int
 		}
 
 		g.Members = append(g.Members, GroupUser{
-			GroupId:    g.Id,
+			GroupId:    g.GroupId,
 			UserId:     userIds[i],
 			MemberType: int(pb.MemberType_GMT_MEMBER),
 			CreateTime: now,
@@ -265,8 +271,8 @@ func (g *Group) AddMembers(ctx context.Context, userIds []int64) ([]int64, []int
 	return existIds, addedIds, nil
 }
 
-func (g *Group) PushAddMember(ctx context.Context, optUserId int64, addedIds []int64) error {
-	var addIdMap = make(map[int64]int32, len(addedIds))
+func (g *Group) PushAddMember(ctx context.Context, optUserId string, addedIds []string) error {
+	var addIdMap = make(map[string]int32, len(addedIds))
 	for i := range addedIds {
 		addIdMap[addedIds[i]] = 0
 	}
@@ -306,7 +312,7 @@ func (g *Group) PushAddMember(ctx context.Context, optUserId int64, addedIds []i
 	return nil
 }
 
-func (g *Group) GetMember(ctx context.Context, userId int64) *GroupUser {
+func (g *Group) GetMember(ctx context.Context, userId string) *GroupUser {
 	for i := range g.Members {
 		if g.Members[i].UserId == userId {
 			return &g.Members[i]
@@ -331,7 +337,7 @@ func (g *Group) UpdateMember(ctx context.Context, in *pb.UpdateGroupMemberReq) e
 }
 
 // DeleteMember 删除用户群组
-func (g *Group) DeleteMember(ctx context.Context, userId int64) error {
+func (g *Group) DeleteMember(ctx context.Context, userId string) error {
 	member := g.GetMember(ctx, userId)
 	if member == nil {
 		return nil
@@ -341,7 +347,7 @@ func (g *Group) DeleteMember(ctx context.Context, userId int64) error {
 	return nil
 }
 
-func (g *Group) PushDeleteMember(ctx context.Context, optId, userId int64) error {
+func (g *Group) PushDeleteMember(ctx context.Context, optId, userId string) error {
 	userResp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: optId})
 	if err != nil {
 		return err

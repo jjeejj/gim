@@ -15,14 +15,14 @@ service BusinessInt {
 }
 
 message AuthReq {
-  int64 user_id = 1;
+  string user_id = 1;
   int64 device_id = 2;
   string token = 3;
 }
 
 message GetUsersReq {
-  map<int64, int32> user_ids = 1; // 用户id
+  map<string, int32> user_ids = 1; // 用户业务id
 }
 message GetUsersResp {
-  map<int64, User> users = 1; // 用户信息
+  map<string, User> users = 1; // 用户信息
 }

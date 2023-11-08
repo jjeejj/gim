@@ -1,12 +1,13 @@
 package connect
 
 import (
-	"gim/pkg/logger"
-	"gim/pkg/util"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"gim/pkg/logger"
+	"gim/pkg/util"
 
 	"go.uber.org/zap"
 
@@ -67,7 +68,7 @@ func DoConn(conn *Conn) {
 
 // HandleReadErr 读取conn错误
 func HandleReadErr(conn *Conn, err error) {
-	logger.Logger.Debug("read tcp error：", zap.Int64("user_id", conn.UserId),
+	logger.Logger.Debug("read tcp error：", zap.String("user_id", conn.UserId),
 		zap.Int64("device_id", conn.DeviceId), zap.Error(err))
 	str := err.Error()
 	// 服务器主动关闭连接

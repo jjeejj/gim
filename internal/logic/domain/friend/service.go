@@ -17,13 +17,13 @@ type service struct{}
 var Service = new(service)
 
 // List 获取好友列表
-func (s *service) List(ctx context.Context, userId int64) ([]*pb.Friend, error) {
+func (s *service) List(ctx context.Context, userId string) ([]*pb.Friend, error) {
 	friends, err := Repo.List(userId, FriendStatusAgree)
 	if err != nil {
 		return nil, err
 	}
 
-	userIds := make(map[int64]int32, len(friends))
+	userIds := make(map[string]int32, len(friends))
 	for i := range friends {
 		userIds[friends[i].FriendId] = 0
 	}
@@ -54,7 +54,7 @@ func (s *service) List(ctx context.Context, userId int64) ([]*pb.Friend, error) 
 }
 
 // AddFriend 添加好友
-func (*service) AddFriend(ctx context.Context, userId, friendId int64, remarks, description string) error {
+func (*service) AddFriend(ctx context.Context, userId, friendId string, remarks, description string) error {
 	// 判断添加的好友是否存在
 	friendUserResp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: friendId})
 	if err != nil {
@@ -108,7 +108,7 @@ func (*service) AddFriend(ctx context.Context, userId, friendId int64, remarks, 
 }
 
 // AgreeAddFriend 同意添加好友
-func (*service) AgreeAddFriend(ctx context.Context, userId, friendId int64, remarks string) error {
+func (*service) AgreeAddFriend(ctx context.Context, userId, friendId string, remarks string) error {
 	friend, err := Repo.Get(friendId, userId)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (*service) AgreeAddFriend(ctx context.Context, userId, friendId int64, rema
 }
 
 // SendToFriend 消息发送至好友
-func (*service) SendToFriend(ctx context.Context, fromDeviceID, fromUserID int64, req *pb.SendMessageReq) (int64, error) {
+func (*service) SendToFriend(ctx context.Context, fromDeviceID int64, fromUserID string, req *pb.SendMessageReq) (int64, error) {
 	sender, err := rpc.GetSender(fromDeviceID, fromUserID)
 	if err != nil {
 		return 0, err
