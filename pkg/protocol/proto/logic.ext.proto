@@ -115,7 +115,7 @@ message CreateGroupReq {
   repeated string member_ids = 5; // 群组成员ID列表
 }
 message CreateGroupResp {
-  int64 group_id = 1; // 群组id
+  string group_id = 1; // 群组id
 }
 
 message UpdateGroupReq {

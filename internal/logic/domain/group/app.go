@@ -13,13 +13,13 @@ type app struct{}
 var App = new(app)
 
 // CreateGroup 创建群组
-func (*app) CreateGroup(ctx context.Context, userId string, in *pb.CreateGroupReq) (int64, error) {
+func (*app) CreateGroup(ctx context.Context, userId string, in *pb.CreateGroupReq) (string, error) {
 	group := entity.CreateGroup(userId, in)
 	err := repo.GroupRepo.Save(group)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
-	return group.Id, nil
+	return group.GroupId, nil
 }
 
 // GetGroup 获取群组信息
