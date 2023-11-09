@@ -106,6 +106,7 @@ func (c *Conn) HandleMessage(bytes []byte) {
 		return
 	}
 	logger.Logger.Debug("HandleMessage", zap.Any("input", input))
+	logger.Logger.Debug("HandleMessage data", zap.String("input", string(input.Data)))
 
 	// 对未登录的用户进行拦截
 	if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == "" {
@@ -173,7 +174,7 @@ func (c *Conn) SignIn(input *pb.Input) {
 		logger.Sugar.Error(err)
 		return
 	}
-
+	logger.Sugar.Info(signIn)
 	_, err = rpc.GetLogicIntClient().ConnSignIn(grpclib.ContextWithRequestId(context.TODO(), input.RequestId), &pb.ConnSignInReq{
 		UserId:     signIn.UserId,
 		DeviceId:   signIn.DeviceId,
@@ -182,7 +183,7 @@ func (c *Conn) SignIn(input *pb.Input) {
 		ClientAddr: c.GetAddr(),
 	})
 
-	c.Send(pb.PackageType_PT_SIGN_IN, input.RequestId, nil, err)
+	c.Send(pb.PackageType_PT_SIGN_IN, input.RequestId, &signIn, err)
 	if err != nil {
 		return
 	}

@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"gim/pkg/protocol/pb"
-	"gim/pkg/util"
 	"log"
 	"net"
 	"time"
+
+	"gim/pkg/protocol/pb"
+	"gim/pkg/util"
 
 	"github.com/alberliu/gn/codec"
 	jsoniter "github.com/json-iterator/go"
@@ -33,7 +34,7 @@ func Json(i interface{}) string {
 }
 
 type TcpClient struct {
-	UserId     int64
+	UserId     string
 	DeviceId   int64
 	Seq        int64
 	Conn       net.Conn

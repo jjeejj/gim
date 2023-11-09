@@ -53,7 +53,7 @@ func TestLogicExtServer_RegisterDevice(t *testing.T) {
 func TestLogicExtServer_SendMessageToFriend(t *testing.T) {
 	resp, err := getLogicExtClient().SendMessageToFriend(getCtx(),
 		&pb.SendMessageReq{
-			ReceiverId: 1,
+			ReceiverId: "1",
 			Content:    []byte("hahaha1000"),
 			SendTime:   util.UnixMilliTime(time.Now()),
 		})
@@ -67,7 +67,7 @@ func TestLogicExtServer_SendMessageToFriend(t *testing.T) {
 func TestLogicExtServer_SendMessageToGroup(t *testing.T) {
 	resp, err := getLogicExtClient().SendMessageToGroup(getCtx(),
 		&pb.SendMessageReq{
-			ReceiverId: 4,
+			ReceiverId: "4",
 			Content:    []byte("group message "),
 			SendTime:   util.UnixMilliTime(time.Now()),
 		})
@@ -95,7 +95,7 @@ func TestLogicExtServer_CreateGroup(t *testing.T) {
 func TestLogicExtServer_UpdateGroup(t *testing.T) {
 	resp, err := getLogicExtClient().UpdateGroup(getCtx(),
 		&pb.UpdateGroupReq{
-			GroupId:      2,
+			GroupId:      "2",
 			Name:         "11",
 			Introduction: "11",
 			Extra:        "11",
@@ -110,7 +110,7 @@ func TestLogicExtServer_UpdateGroup(t *testing.T) {
 func TestLogicExtServer_GetGroup(t *testing.T) {
 	resp, err := getLogicExtClient().GetGroup(getCtx(),
 		&pb.GetGroupReq{
-			GroupId: 2,
+			GroupId: "2",
 		})
 	if err != nil {
 		fmt.Println(err)
@@ -132,7 +132,7 @@ func TestLogicExtServer_GetUserGroups(t *testing.T) {
 func TestLogicExtServer_AddGroupMember(t *testing.T) {
 	resp, err := getLogicExtClient().AddGroupMembers(getCtx(),
 		&pb.AddGroupMembersReq{
-			GroupId: 2,
+			GroupId: "2",
 		})
 	if err != nil {
 		fmt.Println(err)
@@ -144,8 +144,8 @@ func TestLogicExtServer_AddGroupMember(t *testing.T) {
 func TestLogicExtServer_UpdateGroupMember(t *testing.T) {
 	resp, err := getLogicExtClient().UpdateGroupMember(getCtx(),
 		&pb.UpdateGroupMemberReq{
-			GroupId: 2,
-			UserId:  3,
+			GroupId: "2",
+			UserId:  "3",
 			Remarks: "2",
 			Extra:   "2",
 		})
@@ -159,8 +159,8 @@ func TestLogicExtServer_UpdateGroupMember(t *testing.T) {
 func TestLogicExtServer_DeleteGroupMember(t *testing.T) {
 	resp, err := getLogicExtClient().DeleteGroupMember(getCtx(),
 		&pb.DeleteGroupMemberReq{
-			GroupId: 10,
-			UserId:  1,
+			GroupId: "10",
+			UserId:  "1",
 		})
 	if err != nil {
 		fmt.Println(err)
@@ -172,7 +172,7 @@ func TestLogicExtServer_DeleteGroupMember(t *testing.T) {
 func TestLogicExtServer_GetGroupMembers(t *testing.T) {
 	resp, err := getLogicExtClient().GetGroupMembers(getCtx(),
 		&pb.GetGroupMembersReq{
-			GroupId: 2,
+			GroupId: "2",
 		})
 	if err != nil {
 		fmt.Println(err)
@@ -183,7 +183,7 @@ func TestLogicExtServer_GetGroupMembers(t *testing.T) {
 
 func TestLogicExtServer_AddFriend(t *testing.T) {
 	_, err := getLogicExtClient().AddFriend(getCtx(), &pb.AddFriendReq{
-		FriendId:    2,
+		FriendId:    "2",
 		Remarks:     "这是第一个好友",
 		Description: "你可以同意吗",
 	})
