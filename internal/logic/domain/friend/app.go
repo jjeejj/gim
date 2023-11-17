@@ -48,6 +48,7 @@ func (*app) SetFriend(ctx context.Context, userId string, req *pb.SetFriendReq) 
 }
 
 // SendToFriend 消息发送至好友
+// 不添加还有也可以发送消息
 func (*app) SendToFriend(ctx context.Context, fromDeviceID int64, fromUserID string, req *pb.SendMessageReq) (int64, error) {
 	return Service.SendToFriend(ctx, fromDeviceID, fromUserID, req)
 }

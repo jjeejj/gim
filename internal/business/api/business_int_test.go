@@ -2,8 +2,9 @@ package api
 
 import (
 	"fmt"
-	"gim/pkg/protocol/pb"
 	"testing"
+
+	"gim/pkg/protocol/pb"
 
 	"google.golang.org/grpc"
 )
@@ -19,7 +20,7 @@ func getBusinessIntClient() pb.BusinessIntClient {
 
 func TestUserIntServer_Auth(t *testing.T) {
 	_, err := getBusinessIntClient().Auth(getCtx(), &pb.AuthReq{
-		UserId:   3,
+		UserId:   "3",
 		DeviceId: 1,
 		Token:    "0",
 	})
@@ -28,7 +29,7 @@ func TestUserIntServer_Auth(t *testing.T) {
 
 func TestUserIntServer_GetUsers(t *testing.T) {
 	resp, err := getBusinessIntClient().GetUsers(getCtx(), &pb.GetUsersReq{
-		UserIds: map[int64]int32{1: 0, 2: 0, 3: 0},
+		UserIds: map[string]int32{"1": 0, "2": 0, "3": 0},
 	})
 	if err != nil {
 		fmt.Println(err)

@@ -22,12 +22,12 @@ func getLogicIntClient() pb.LogicIntClient {
 }
 
 func TestLogicIntServer_SConnSignIn(t *testing.T) {
-	token := "0"
+	token := "NNGWCTLGQAPWZELPBOCRNBPYJMWUWKNBXJNGVBLF"
 
 	resp, err := getLogicIntClient().ConnSignIn(context.TODO(),
 		&pb.ConnSignInReq{
 			DeviceId:   1,
-			UserId:     "1",
+			UserId:     "22222222222",
 			Token:      token,
 			ConnAddr:   "127.0.0.1:8001",
 			ClientAddr: "127.0.0.1:8999",

@@ -24,7 +24,12 @@ import (
 const (
 	CoonTypeTCP int8 = 1 // tcp连接
 	ConnTypeWS  int8 = 2 // websocket连接
+
 )
+
+// var (
+//     encoder = codec.NewUvarintEncoder(1024)
+// )
 
 type Conn struct {
 	CoonType int8            // 连接类型
@@ -44,6 +49,7 @@ func (c *Conn) Write(bytes []byte) error {
 	} else if c.CoonType == ConnTypeWS {
 		return c.WriteToWS(bytes)
 	}
+
 	logger.Logger.Error("unknown conn type", zap.Any("conn", c))
 	return nil
 }
@@ -106,13 +112,12 @@ func (c *Conn) HandleMessage(bytes []byte) {
 		return
 	}
 	logger.Logger.Debug("HandleMessage", zap.Any("input", input))
-	logger.Logger.Debug("HandleMessage data", zap.String("input", string(input.Data)))
 
 	// 对未登录的用户进行拦截
-	if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == "" {
-		// 应该告诉用户没有登录
-		return
-	}
+	// if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == "" {
+	//     // 应该告诉用户没有登录
+	//     return
+	// }
 
 	switch input.Type {
 	case pb.PackageType_PT_SIGN_IN:
@@ -121,7 +126,7 @@ func (c *Conn) HandleMessage(bytes []byte) {
 		c.Sync(input)
 	case pb.PackageType_PT_HEARTBEAT:
 		c.Heartbeat(input)
-	case pb.PackageType_PT_MESSAGE:
+	case pb.PackageType_PT_MESSAGE: // 消息收到之后回复的 ack 信息
 		c.MessageACK(input)
 	case pb.PackageType_PT_SUBSCRIBE_ROOM:
 		c.SubscribedRoom(input)
@@ -135,6 +140,7 @@ func (c *Conn) Send(pt pb.PackageType, requestId int64, message proto.Message, e
 	var output = pb.Output{
 		Type:      pt,
 		RequestId: requestId,
+		Code:      0,
 	}
 
 	if err != nil {
@@ -157,9 +163,10 @@ func (c *Conn) Send(pt pb.PackageType, requestId int64, message proto.Message, e
 		logger.Sugar.Error(err)
 		return
 	}
-
 	err = c.Write(outputBytes)
+	// err = encoder.EncodeToWriter(c.Conn, inputByf)
 	if err != nil {
+		logger.Logger.Info("Write ---------------")
 		logger.Sugar.Error(err)
 		c.Close()
 		return
@@ -174,7 +181,6 @@ func (c *Conn) SignIn(input *pb.Input) {
 		logger.Sugar.Error(err)
 		return
 	}
-	logger.Sugar.Info(signIn)
 	_, err = rpc.GetLogicIntClient().ConnSignIn(grpclib.ContextWithRequestId(context.TODO(), input.RequestId), &pb.ConnSignInReq{
 		UserId:     signIn.UserId,
 		DeviceId:   signIn.DeviceId,
@@ -216,10 +222,13 @@ func (c *Conn) Sync(input *pb.Input) {
 }
 
 // Heartbeat 心跳
+// 直接回复心跳信息
 func (c *Conn) Heartbeat(input *pb.Input) {
-	c.Send(pb.PackageType_PT_HEARTBEAT, input.RequestId, nil, nil)
-
 	logger.Sugar.Infow("heartbeat", "device_id", c.DeviceId, "user_id", c.UserId)
+	c.Send(pb.PackageType_PT_HEARTBEAT, input.RequestId, &pb.HeartbeatInput{
+		DeviceId: c.DeviceId,
+		UserId:   c.UserId,
+	}, nil)
 }
 
 // MessageACK 消息收到回执
