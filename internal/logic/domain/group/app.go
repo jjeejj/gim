@@ -85,7 +85,7 @@ func (*app) AddMembers(ctx context.Context, userId, groupId string, userIds []st
 		return nil, err
 	}
 
-	err = group.PushAddMember(ctx, userId, addedIds)
+	err = group.PushAddMember(ctx, groupId, userId, addedIds)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func (*app) DeleteMember(ctx context.Context, groupId, userId string, optId stri
 		return err
 	}
 
-	err = group.PushDeleteMember(ctx, optId, userId)
+	err = group.PushDeleteMember(ctx, groupId, optId, userId)
 	if err != nil {
 		return err
 	}

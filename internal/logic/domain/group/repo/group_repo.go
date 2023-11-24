@@ -38,11 +38,7 @@ func (*groupRepo) Get(groupId string) (*entity.Group, error) {
 // Save 保存群组信息
 func (*groupRepo) Save(group *entity.Group) error {
 	groupId := group.GroupId
-	err := GroupDao.Save(group)
-	if err != nil {
-		return err
-	}
-
+	var err error
 	members := group.Members
 	for i := range members {
 		members[i].GroupId = group.GroupId
@@ -51,12 +47,14 @@ func (*groupRepo) Save(group *entity.Group) error {
 			if err != nil {
 				return err
 			}
+			group.UserNum += 1
 		}
 		if members[i].UpdateType == entity.UpdateTypeDelete {
-			err = GroupUserRepo.Delete(group.Id, members[i].UserId)
+			err = GroupUserRepo.Delete(group.GroupId, members[i].UserId)
 			if err != nil {
 				return err
 			}
+			group.UserNum -= 1
 		}
 	}
 
@@ -65,6 +63,11 @@ func (*groupRepo) Save(group *entity.Group) error {
 		if err != nil {
 			return err
 		}
+	}
+	// 保存更新后的群组信息
+	err = GroupDao.Save(group)
+	if err != nil {
+		return err
 	}
 	return nil
 }

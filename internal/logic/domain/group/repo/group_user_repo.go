@@ -59,7 +59,7 @@ func (*groupUserRepo) Save(groupUser *entity.GroupUser) error {
 }
 
 // Delete 将用户从群组删除
-func (d *groupUserRepo) Delete(groupId int64, userId string) error {
+func (d *groupUserRepo) Delete(groupId string, userId string) error {
 	err := db.DB.Exec("delete from group_user where group_id = ? and user_id = ?",
 		groupId, userId).Error
 	if err != nil {

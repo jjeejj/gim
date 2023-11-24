@@ -56,6 +56,7 @@ message UpdateGroupPush {
   string avatar_url = 4; // 群组头像
   string introduction = 5; // 群组简介
   string extra = 6; // 附加字段
+  string group_id = 7; // 变更的群组id
 }
 
 // 添加群组成员 PC_AGREE_ADD_GROUPS = 121
@@ -63,6 +64,7 @@ message AddGroupMembersPush {
   string opt_id = 1; // 操作人用户id
   string opt_name = 2; // 操作人昵称
   repeated GroupMember members = 3; // 群组成员
+  string group_id = 4; // 变更的群组id
 }
 
 // 删除群组成员 PC_REMOVE_GROUP_MEMBER = 122
@@ -70,5 +72,6 @@ message RemoveGroupMemberPush {
   string opt_id = 1; // 操作人用户业务id
   string opt_name = 2; // 操作人昵称
   string deleted_user_id = 3; // 被删除的成员id
+  string group_id = 4; // 变更的群组id
 }
 

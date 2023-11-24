@@ -18,15 +18,15 @@ var GroupCache = new(groupCache)
 
 // Get 获取群组缓存
 func (c *groupCache) Get(groupId string) (*entity.Group, error) {
-	var user entity.Group
-	err := db.RedisUtil.Get(GroupKey+groupId, &user)
+	var group entity.Group
+	err := db.RedisUtil.Get(GroupKey+groupId, &group)
 	if err != nil && err != redis.Nil {
 		return nil, gerrors.WrapError(err)
 	}
 	if err == redis.Nil {
 		return nil, nil
 	}
-	return &user, nil
+	return &group, nil
 }
 
 // Set 设置群组缓存

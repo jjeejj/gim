@@ -266,12 +266,12 @@ func (g *Group) AddMembers(ctx context.Context, userIds []string) ([]string, []s
 		addedIds = append(addedIds, userIds[i])
 	}
 
-	g.UserNum += int32(len(addedIds))
+	// g.UserNum += int32(len(addedIds))
 
 	return existIds, addedIds, nil
 }
 
-func (g *Group) PushAddMember(ctx context.Context, optUserId string, addedIds []string) error {
+func (g *Group) PushAddMember(ctx context.Context, groupId, optUserId string, addedIds []string) error {
 	var addIdMap = make(map[string]int32, len(addedIds))
 	for i := range addedIds {
 		addIdMap[addedIds[i]] = 0
@@ -302,9 +302,10 @@ func (g *Group) PushAddMember(ctx context.Context, optUserId string, addedIds []
 
 	optUser := usersResp.Users[optUserId]
 	err = g.PushMessage(ctx, pb.PushCode_PC_ADD_GROUP_MEMBERS, &pb.AddGroupMembersPush{
-		OptId:   optUser.UserId,
-		OptName: optUser.Nickname,
-		Members: members,
+		OptId:   optUser.UserId,   // 操作的用户id
+		OptName: optUser.Nickname, // 操作的用你昵称
+		Members: members,          //
+		GroupId: groupId,
 	}, true)
 	if err != nil {
 		logger.Sugar.Error(err)
@@ -347,7 +348,7 @@ func (g *Group) DeleteMember(ctx context.Context, userId string) error {
 	return nil
 }
 
-func (g *Group) PushDeleteMember(ctx context.Context, optId, userId string) error {
+func (g *Group) PushDeleteMember(ctx context.Context, groupId, optId, userId string) error {
 	userResp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: optId})
 	if err != nil {
 		return err
@@ -356,6 +357,7 @@ func (g *Group) PushDeleteMember(ctx context.Context, optId, userId string) erro
 		OptId:         optId,
 		OptName:       userResp.User.Nickname,
 		DeletedUserId: userId,
+		GroupId:       groupId,
 	}, true)
 	if err != nil {
 		return err
