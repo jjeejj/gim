@@ -125,18 +125,18 @@ func (*service) AgreeAddFriend(ctx context.Context, userId, friendId string, rem
 		return err
 	}
 
-	now := time.Now()
-	err = Repo.Save(&Friend{
-		UserId:     userId,
-		FriendId:   friendId,
-		Remarks:    remarks,
-		Status:     FriendStatusAgree,
-		CreateTime: now,
-		UpdateTime: now,
-	})
-	if err != nil {
-		return err
-	}
+	// now := time.Now()
+	// err = Repo.Save(&Friend{
+	// 	UserId:     userId,
+	// 	FriendId:   friendId,
+	// 	Remarks:    remarks,
+	// 	Status:     FriendStatusAgree,
+	// 	CreateTime: now,
+	// 	UpdateTime: now,
+	// })
+	// if err != nil {
+	// 	return err
+	// }
 
 	resp, err := rpc.GetBusinessIntClient().GetUser(ctx, &pb.GetUserReq{UserId: userId})
 	if err != nil {

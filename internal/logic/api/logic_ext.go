@@ -112,6 +112,7 @@ func (*LogicExtServer) SendMessageToGroup(ctx context.Context, in *pb.SendMessag
 // CreateGroup 创建群组
 // 传的参数 member_ids 是不包含创建人的，创建人默认入群 而且是管理员
 // 注意，这里不判断 添加到群成员的是否真是存在
+// 群相关信息添加到缓存
 func (*LogicExtServer) CreateGroup(ctx context.Context, in *pb.CreateGroupReq) (*pb.CreateGroupResp, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {

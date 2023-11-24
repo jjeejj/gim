@@ -30,9 +30,9 @@ func (*defaultBuilder) Build() Configuration {
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
 
-		ConnectLocalAddr:     "127.0.0.1:8000",
+		ConnectLocalAddr:     "192.168.110.238:8000",
 		ConnectRPCListenAddr: ":8000",
-		ConnectTCPListenAddr: "127.0.0.1:8001",
+		ConnectTCPListenAddr: ":8001",
 		ConnectWSListenAddr:  ":8002",
 
 		LogicRPCListenAddr:    ":8010",
@@ -40,7 +40,7 @@ func (*defaultBuilder) Build() Configuration {
 		FileHTTPListenAddr:    "8030",
 
 		ConnectIntClientBuilder: func() pb.ConnectIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///127.0.0.1:8000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.110.238:8000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, picker.AddrPickerName)))
 			if err != nil {
 				panic(err)
@@ -48,7 +48,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewConnectIntClient(conn)
 		},
 		LogicIntClientBuilder: func() pb.LogicIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///127.0.0.1:8010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.110.238:8010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
@@ -56,7 +56,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewLogicIntClient(conn)
 		},
 		BusinessIntClientBuilder: func() pb.BusinessIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///127.0.0.1:8020", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.110.238:8020", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)

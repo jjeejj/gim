@@ -15,7 +15,7 @@ var GroupDao = new(groupDao)
 // Get 获取群组信息
 func (*groupDao) Get(groupId string) (*entity.Group, error) {
 	var group = entity.Group{GroupId: groupId}
-	err := db.DB.First(&group).Error
+	err := db.DB.First(&group, "group_id = ?", groupId).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, gerrors.WrapError(err)
 	}

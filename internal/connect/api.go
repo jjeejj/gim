@@ -2,6 +2,7 @@ package connect
 
 import (
 	"context"
+
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
@@ -22,15 +23,17 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 	// 获取设备对应的TCP连接
 	conn := GetConn(req.DeviceId)
 	if conn == nil {
-		logger.Logger.Warn("GetConn warn", zap.Int64("device_id", req.DeviceId))
+		logger.Logger.Warn("conn is nil GetConn warn", zap.Int64("device_id", req.DeviceId))
 		return resp, nil
 	}
 
 	if conn.DeviceId != req.DeviceId {
-		logger.Logger.Warn("GetConn warn", zap.Int64("device_id", req.DeviceId))
+		logger.Logger.Warn("conn.DeviceId is not equal GetConn req.DeviceId warn",
+			zap.Int64("device_id", req.DeviceId),
+			zap.Int64("conn_device_id", conn.DeviceId))
 		return resp, nil
 	}
-
+	logger.Logger.Debug("---------------------")
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
 }

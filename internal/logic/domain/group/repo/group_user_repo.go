@@ -15,7 +15,7 @@ var GroupUserRepo = new(groupUserRepo)
 // ListByUserId 获取用户加入的群组信息
 func (*groupUserRepo) ListByUserId(userId string) ([]entity.Group, error) {
 	var groups []entity.Group
-	err := db.DB.Select("g.id,g.name,g.avatar_url,g.introduction,g.user_num,g.extra,g.create_time,g.update_time").
+	err := db.DB.Select("g.id,g.name,g.group_id,g.avatar_url,g.introduction,g.user_num,g.extra,g.create_time,g.update_time").
 		Table("group_user u").
 		Joins("join `group` g on u.group_id = g.group_id").
 		Where("u.user_id = ?", userId).

@@ -27,13 +27,14 @@ func (s *BusinessExtServer) SignIn(ctx context.Context, req *pb.SignInReq) (*pb.
 }
 
 // GetUser 获取指定用户的信息
+// 获取传入的用户id
 func (s *BusinessExtServer) GetUser(ctx context.Context, req *pb.GetUserReq) (*pb.GetUserResp, error) {
-	userId, _, err := grpclib.GetCtxData(ctx)
-	if err != nil {
-		return nil, err
-	}
+	// userId, _, err := grpclib.GetCtxData(ctx)
+	// if err != nil {
+	//     return nil, err
+	// }
 
-	user, err := app2.UserApp.Get(ctx, userId)
+	user, err := app2.UserApp.Get(ctx, req.UserId)
 	return &pb.GetUserResp{User: user}, err
 }
 
