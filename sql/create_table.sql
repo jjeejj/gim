@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `device`;
 CREATE TABLE `device`
 (
-    `id`             bigint(20) unsigned NOT NULL COMMENT '主键',
+    `id`             bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
     `user_id`        varchar(512)  NOT NULL COMMENT '用户业务唯一id',
     `type`           tinyint(3) NOT NULL COMMENT '设备类型,1:Android；2：IOS；3：Windows; 4：MacOS；5：Web',
     `brand`          varchar(20) NOT NULL COMMENT '手机厂商',
@@ -29,8 +29,8 @@ DROP TABLE IF EXISTS `friend`;
 CREATE TABLE `friend`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-    `user_id`     varchar(512) NOT NULL COMMENT '用户业务唯一id',
-    `friend_id`   varchar(512) NOT NULL COMMENT '好友用户业务唯一id',
+    `user_id`     varchar(256) NOT NULL COMMENT '用户业务唯一id',
+    `friend_id`   varchar(256) NOT NULL COMMENT '好友用户业务唯一id',
     `remarks`     varchar(20)   NOT NULL COMMENT '备注',
     `extra`       varchar(1024) NOT NULL COMMENT '附加属性',
     `status`      tinyint(4) NOT NULL COMMENT '状态，1：申请，2：同意',

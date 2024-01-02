@@ -162,6 +162,7 @@ func (g *Group) SendMessage(ctx context.Context, fromDeviceID int64, fromUserID 
 	}
 
 	// 如果发送者是用户，将消息发送给发送者,获取用户seq
+	// 自己给自己其他设备发送消息
 	userSeq, err := proxy.MessageProxy.SendToUser(ctx, fromDeviceID, fromUserID, msg, true)
 	if err != nil {
 		return 0, err

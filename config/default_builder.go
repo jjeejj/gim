@@ -24,8 +24,8 @@ func (*defaultBuilder) Build() Configuration {
 	logger.Target = logger.Console
 
 	return Configuration{
-		MySQL:                "root:123456@tcp(192.168.110.238:3306)/gim?charset=utf8&parseTime=true",
-		RedisHost:            "192.168.110.238:6379",
+		MySQL:                "jhim:Szyw@2023@tcp(172.16.100.101:3306)/gim?charset=utf8&parseTime=true",
+		RedisHost:            "172.16.100.101:6379",
 		RedisPassword:        "",
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
