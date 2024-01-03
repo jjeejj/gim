@@ -15,7 +15,7 @@ run_all:
 	make connect
 
 build_business:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_business_srv $(CMDDIR)/logic/main.go
+	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_business_srv $(CMDDIR)/business/main.go
 
 build_logic:
 	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_logic_srv $(CMDDIR)/logic/main.go
@@ -30,7 +30,7 @@ build_logic:
 #  	GOOS=linux GOARCH=amd64 go build -o ./bin/${serverName} -ldflags "-w -X 'main.BuildGoVersion=${buildGoVersion}' -X 'main.BuildVersion=${buildVersion}' -X 'main.BuildTime=${buildTime}' -X 'main.BuildCommit=${buildCommit}'" $(CMDDIR)/logic/main.go;
 
 build_connect:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_connect_srv $(CMDDIR)/logic/main.go
+	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_connect_srv $(CMDDIR)/connect/main.go
 
 build_all:
 	make build_business
