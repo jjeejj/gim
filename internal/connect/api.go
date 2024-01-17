@@ -36,11 +36,15 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 		return resp, nil
 	}
 	// 反序列化，填充 社交id
-	msgContent := &pb.GimMessage{}
-	err := sonic.Unmarshal(req.Message.Content, msgContent)
+	userMessagePus := &pb.UserMessagePush{}
+	err := sonic.Unmarshal(req.Message.Content, userMessagePus)
 	if err == nil {
-		msgContent.SocialMsgId = req.Message.UserSeq
-		req.Message.Content, _ = sonic.Marshal(msgContent)
+		msgContent := &pb.GimMessage{}
+		err = sonic.Unmarshal(userMessagePus.Content, msgContent)
+		if err == nil {
+			msgContent.SocialMsgId = req.Message.UserSeq
+			req.Message.Content, _ = sonic.Marshal(userMessagePus)
+		}
 	}
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
