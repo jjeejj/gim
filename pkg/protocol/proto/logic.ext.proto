@@ -56,7 +56,7 @@ message RegisterDeviceResp {
 
 message SendMessageReq {
   string receiver_id = 1; // 接收者ID，用户ID/群组ID
-  bytes content = 2; // 推动内容
+  bytes content = 2; // 消息内容
   int64 send_time = 3; // 消息发送时间戳，精确到毫秒
 }
 message SendMessageResp {

@@ -202,7 +202,7 @@ type SendMessageReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	ReceiverId string `protobuf:"bytes,1,opt,name=receiver_id,json=receiverId,proto3" json:"receiver_id,omitempty"` // 接收者ID，用户ID/群组ID
-	Content    []byte `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                         // 推动内容
+	Content    []byte `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                         // 消息内容
 	SendTime   int64  `protobuf:"varint,3,opt,name=send_time,json=sendTime,proto3" json:"send_time,omitempty"`      // 消息发送时间戳，精确到毫秒
 }
 
