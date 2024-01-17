@@ -2,12 +2,13 @@ syntax = "proto3";
 package pb;
 option go_package = "gim/pkg/protocol/pb";
 
-message ContentType {
-  ContentText text = 1;
-  ContentLink link = 2;
-  ContentImage image = 3;
-  ContentDocument document = 4;
-  ContentVideo video = 5;
+enum ContentType {
+  Unknown = 0; // 未知不使用
+  Text = 1; // 文字
+  Link = 2; // 链接
+  Document = 3; // 文档
+  Image = 4; // 图片
+  Video = 5; // 视频
 }
 
 message ContentText {
@@ -42,7 +43,11 @@ message ContentVideo {
 }
 
 message Content {
-  ContentType content = 1;
+  ContentText text = 1;
+  ContentLink link = 2;
+  ContentImage image = 3;
+  ContentDocument document = 4;
+  ContentVideo video = 5;
 }
 
 enum TopicMetaType {
