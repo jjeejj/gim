@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/bytedance/sonic"
+	"google.golang.org/protobuf/proto"
 
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
@@ -37,15 +38,23 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 	}
 	// 反序列化，填充 社交id
 	userMessagePus := &pb.UserMessagePush{}
-	err := sonic.Unmarshal(req.Message.Content, userMessagePus)
-	if err == nil {
+	err := proto.Unmarshal(req.Message.Content, userMessagePus)
+	if err != nil {
+		logger.Logger.Warn("sonic.Unmarshal userMessagePus error", zap.Error(err))
+		// return resp, nil
+	} else {
+		logger.Logger.Info("sonic.Unmarshal userMessagePus success", zap.Any("userMessagePus", userMessagePus))
 		msgContent := &pb.GimMessage{}
 		err = sonic.Unmarshal(userMessagePus.Content, msgContent)
-		if err == nil {
+		if err != nil {
+			logger.Logger.Warn("sonic.Unmarshal msgContent error", zap.Error(err))
+		} else {
+			logger.Logger.Info("sonic.Unmarshal msgContent success", zap.Any("msgContent", msgContent))
 			msgContent.SocialMsgId = req.Message.UserSeq
 			req.Message.Content, _ = sonic.Marshal(userMessagePus)
 		}
 	}
+
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
 }
