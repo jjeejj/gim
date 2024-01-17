@@ -3,6 +3,8 @@ package connect
 import (
 	"context"
 
+	"github.com/bytedance/sonic"
+
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
@@ -33,7 +35,13 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 			zap.Int64("conn_device_id", conn.DeviceId))
 		return resp, nil
 	}
-	logger.Logger.Debug("---------------------")
+	// 反序列化，填充 社交id
+	msgContent := &pb.GimMessage{}
+	err := sonic.Unmarshal(req.Message.Content, msgContent)
+	if err == nil {
+		msgContent.SocialMsgId = req.Message.UserSeq
+		req.Message.Content, _ = sonic.Marshal(msgContent)
+	}
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
 }

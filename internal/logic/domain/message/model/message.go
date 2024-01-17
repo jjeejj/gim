@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
 	"gim/pkg/protocol/pb"
@@ -23,6 +24,7 @@ func (m *Message) MessageToPB() *pb.Message {
 	return &pb.Message{
 		Code:     m.Code,
 		Content:  m.Content,
+		UserSeq:  fmt.Sprintf("%s_%d", m.UserId, m.Seq),
 		Seq:      m.Seq,
 		SendTime: util.UnixMilliTime(m.SendTime),
 		Status:   pb.MessageStatus(m.Status),

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"gim/internal/logic/domain/message/model"
 	"gim/internal/logic/domain/message/repo"
@@ -81,6 +82,7 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 			return 0, err
 		}
 		message.Seq = seq
+		message.UserSeq = fmt.Sprintf("%s_%d", toUserID, seq)
 
 		selfMessage := model.Message{
 			UserId:    toUserID,

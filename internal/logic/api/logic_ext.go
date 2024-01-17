@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	"gim/internal/logic/domain/device"
 	"gim/internal/logic/domain/friend"
@@ -29,6 +30,7 @@ func (s *LogicExtServer) PushRoom(ctx context.Context, req *pb.PushRoomReq) (*em
 }
 
 // SendMessageToFriend 发送好友消息
+// 返回的序列为：userID+seq
 func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessageReq) (*pb.SendMessageResp, error) {
 	userId, deviceId, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -39,7 +41,7 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 	if err != nil {
 		return nil, err
 	}
-	return &pb.SendMessageResp{Seq: seq}, nil
+	return &pb.SendMessageResp{Seq: fmt.Sprintf("%s_%d", userId, seq)}, nil
 }
 
 // AddFriend 添加好友
@@ -106,7 +108,7 @@ func (*LogicExtServer) SendMessageToGroup(ctx context.Context, in *pb.SendMessag
 	if err != nil {
 		return nil, err
 	}
-	return &pb.SendMessageResp{Seq: seq}, nil
+	return &pb.SendMessageResp{Seq: fmt.Sprintf("%s_%d", userId, seq)}, nil
 }
 
 // CreateGroup 创建群组

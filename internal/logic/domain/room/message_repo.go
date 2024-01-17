@@ -2,12 +2,13 @@ package room
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"gim/pkg/db"
 	"gim/pkg/gerrors"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/util"
-	"strconv"
-	"time"
 
 	"github.com/go-redis/redis"
 	"google.golang.org/protobuf/proto"
@@ -28,8 +29,9 @@ func (*messageRepo) Add(roomId int64, msg *pb.Message) error {
 	if err != nil {
 		return gerrors.WrapError(err)
 	}
+
 	_, err = db.RedisCli.ZAdd(key, redis.Z{
-		Score:  float64(msg.Seq),
+		// Score:  float64(msg.Seq),
 		Member: buf,
 	}).Result()
 

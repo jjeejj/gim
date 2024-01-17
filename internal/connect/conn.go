@@ -239,7 +239,8 @@ func (c *Conn) MessageACK(input *pb.Input) {
 		logger.Sugar.Error(err)
 		return
 	}
-
+	// seqStr := strings.Replace(messageACK.DeviceAck, fmt.Sprintf("%s_", c.UserId), "", -1)
+	// seq, _ := strconv.Atoi(seqStr)
 	_, _ = rpc.GetLogicIntClient().MessageACK(grpclib.ContextWithRequestId(context.TODO(), input.RequestId), &pb.MessageACKReq{
 		UserId:      c.UserId,
 		DeviceId:    c.DeviceId,
