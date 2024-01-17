@@ -3,13 +3,11 @@ package pb;
 option go_package = "gim/pkg/protocol/pb";
 
 message ContentType {
-  oneof content {
-    ContentText text = 1;
-    ContentLink link = 2;
-    ContentImage image = 3;
-    ContentDocument document = 4;
-    ContentVideo video = 5;
-  }
+  ContentText text = 1;
+  ContentLink link = 2;
+  ContentImage image = 3;
+  ContentDocument document = 4;
+  ContentVideo video = 5;
 }
 
 message ContentText {
