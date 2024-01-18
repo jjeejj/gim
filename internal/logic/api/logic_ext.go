@@ -41,7 +41,10 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 	if err != nil {
 		return nil, err
 	}
-	return &pb.SendMessageResp{Seq: fmt.Sprintf("%s_%d", userId, seq)}, nil
+	return &pb.SendMessageResp{
+		Seq:     seq,
+		UserSeq: fmt.Sprintf("%s_%d", userId, seq),
+	}, nil
 }
 
 // AddFriend 添加好友
@@ -108,7 +111,10 @@ func (*LogicExtServer) SendMessageToGroup(ctx context.Context, in *pb.SendMessag
 	if err != nil {
 		return nil, err
 	}
-	return &pb.SendMessageResp{Seq: fmt.Sprintf("%s_%d", userId, seq)}, nil
+	return &pb.SendMessageResp{
+		UserSeq: fmt.Sprintf("%s_%d", userId, seq),
+		Seq:     seq,
+	}, nil
 }
 
 // CreateGroup 创建群组

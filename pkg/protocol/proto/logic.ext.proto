@@ -60,7 +60,8 @@ message SendMessageReq {
   int64 send_time = 3; // 消息发送时间戳，精确到毫秒
 }
 message SendMessageResp {
-  string seq = 1; // 消息序列号
+  int64 seq = 1; // 消息序列号
+  string user_seq = 2;
 }
 
 message PushRoomReq{

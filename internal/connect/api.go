@@ -36,6 +36,7 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 			zap.Int64("conn_device_id", conn.DeviceId))
 		return resp, nil
 	}
+	logger.Logger.Warn("req.Message", zap.Any("req.Message", req.Message))
 	// 反序列化，填充 社交id
 	userMessagePus := &pb.UserMessagePush{}
 	err := proto.Unmarshal(req.Message.Content, userMessagePus)
@@ -43,15 +44,16 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 		logger.Logger.Warn("sonic.Unmarshal userMessagePus error", zap.Error(err))
 		// return resp, nil
 	} else {
-		logger.Logger.Info("sonic.Unmarshal userMessagePus success", zap.Any("userMessagePus", userMessagePus))
+		// logger.Logger.Info("sonic.Unmarshal userMessagePus success", zap.Any("userMessagePus", userMessagePus))
 		msgContent := &pb.GimMessage{}
 		err = sonic.Unmarshal(userMessagePus.Content, msgContent)
 		if err != nil {
 			logger.Logger.Warn("sonic.Unmarshal msgContent error", zap.Error(err))
 		} else {
-			logger.Logger.Info("sonic.Unmarshal msgContent success", zap.Any("msgContent", msgContent))
 			msgContent.SocialMsgId = req.Message.UserSeq
-			req.Message.Content, _ = sonic.Marshal(userMessagePus)
+			userMessagePus.Content, _ = sonic.Marshal(msgContent)
+			req.Message.Content, _ = proto.Marshal(userMessagePus)
+			// logger.Logger.Info("sonic.Unmarshal msgContent success", zap.Any("msgContent", msgContent))
 		}
 	}
 
