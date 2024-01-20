@@ -26,6 +26,7 @@ message ContentImage {
   string resource_url = 3;
   string file_hash = 4;
   int32 file_status = 5;
+  int64 size = 6; // 文件大小 单位 byte
 }
 
 message ContentDocument {
@@ -33,6 +34,7 @@ message ContentDocument {
   string resource_url = 2;
   string file_hash = 3;
   int32 file_status = 5;
+  int64 size = 6; // 文件大小 单位 byte
 }
 
 message ContentVideo {
@@ -40,6 +42,7 @@ message ContentVideo {
   string resource_url = 2;
   string file_hash = 3;
   int32 file_status = 5;
+  int64 size = 6; // 文件大小 单位 byte
 }
 
 message Content {
