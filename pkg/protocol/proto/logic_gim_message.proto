@@ -45,12 +45,19 @@ message ContentVideo {
   int64 size = 6; // 文件大小 单位 byte
 }
 
+// 消息内容里用户信息
+message ContentUser {
+  string name = 1; // 谁发的消息
+  string avatar_url = 2; // 头像链接
+}
+
 message Content {
   ContentText text = 1;
   ContentLink link = 2;
   ContentImage image = 3;
   ContentDocument document = 4;
   ContentVideo video = 5;
+  ContentUser user = 8;
 }
 
 enum TopicMetaType {
