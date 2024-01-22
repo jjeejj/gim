@@ -4,8 +4,11 @@ import (
 	"context"
 	"time"
 
+	"go.uber.org/zap"
+
 	"gim/internal/logic/proxy"
 	"gim/pkg/gerrors"
+	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
 
@@ -180,13 +183,15 @@ func (*service) SendToFriend(ctx context.Context, fromDeviceID int64, fromUserID
 	// 给发送着通知
 	seq, err := proxy.MessageProxy.SendToUser(ctx, fromDeviceID, fromUserID, msg, true)
 	if err != nil {
-		return 0, err
+		logger.Logger.Error("send message to send user other device error", zap.Error(err))
+		// return 0, err
 	}
 
 	// 发给接收者
 	_, err = proxy.MessageProxy.SendToUser(ctx, fromDeviceID, req.ReceiverId, msg, true)
 	if err != nil {
-		return 0, err
+		logger.Logger.Error("send message to receive user error", zap.Error(err))
+		// return 0, err
 	}
 
 	return seq, nil

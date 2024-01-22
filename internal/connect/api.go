@@ -22,14 +22,14 @@ type ConnIntServer struct {
 // DeliverMessage 投递消息
 func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessageReq) (*emptypb.Empty, error) {
 	resp := &emptypb.Empty{}
-
+	logger.Logger.Info("=======================")
 	// 获取设备对应的TCP连接
 	conn := GetConn(req.DeviceId)
 	if conn == nil {
 		logger.Logger.Warn("conn is nil GetConn warn", zap.Int64("device_id", req.DeviceId))
 		return resp, nil
 	}
-
+	logger.Logger.Info("-000000000000")
 	if conn.DeviceId != req.DeviceId {
 		logger.Logger.Warn("conn.DeviceId is not equal GetConn req.DeviceId warn",
 			zap.Int64("device_id", req.DeviceId),
