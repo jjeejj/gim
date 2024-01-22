@@ -15,6 +15,7 @@ type User struct {
 	AvatarUrl  string    // 用户头像
 	Extra      string    // 附加属性
 	SourceCode string    // 来源编码
+	Phone      string    // 手机号
 	CreateTime time.Time // 创建时间
 	UpdateTime time.Time // 更新时间
 }

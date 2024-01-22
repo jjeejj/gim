@@ -32,6 +32,7 @@ message User {
   string avatar_url = 4; // 头像地址
   string extra = 5; // 附加字段
   string source_code = 6; // 用户来源编码
+  string phone = 10; // 手机号
   int64 create_time = 7; // 创建时间
   int64 update_time = 8; // 更新时间
   int64 id = 9; // 数据库的主键id
@@ -49,6 +50,7 @@ message UpdateUserReq {
   int32 sex = 2; // 性别
   string avatar_url = 3; // 头像地址
   string extra = 4; // 附加字段
+  string phone = 5; // 手机号
 }
 
 message SearchUserReq{

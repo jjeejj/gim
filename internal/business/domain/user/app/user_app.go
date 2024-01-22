@@ -30,6 +30,7 @@ func (*userApp) Update(ctx context.Context, userId string, req *pb.UpdateUserReq
 	u.Sex = req.Sex
 	u.AvatarUrl = req.AvatarUrl
 	u.Extra = req.Extra
+	u.Phone = req.Phone
 	u.UpdateTime = time.Now()
 
 	err = repo.UserRepo.Save(u)

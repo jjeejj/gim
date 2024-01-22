@@ -98,6 +98,7 @@ CREATE TABLE `user`
     `avatar_url`   varchar(256)  NOT NULL COMMENT '用户头像链接',
     `extra`        varchar(1024) NOT NULL COMMENT '附加属性',
     `source_code`  varchar(20) NOT NULL DEFAULT '' COMMENT '用户来源编码: 其他系统如果接入用户时候，定义产品对应的编码传过来  ',
+    `phone`        varchar(100) COMMENT '手机号码',
     `create_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
