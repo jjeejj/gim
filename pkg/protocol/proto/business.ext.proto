@@ -51,6 +51,7 @@ message UpdateUserReq {
   string avatar_url = 3; // 头像地址
   string extra = 4; // 附加字段
   string phone = 5; // 手机号
+  string user_id = 6; // 用户业务id
 }
 
 message SearchUserReq{

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	app2 "gim/internal/business/domain/user/app"
-	"gim/pkg/grpclib"
 	"gim/pkg/protocol/pb"
 
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -39,12 +38,13 @@ func (s *BusinessExtServer) GetUser(ctx context.Context, req *pb.GetUserReq) (*p
 }
 
 // UpdateUser 更新用户信息
+// 这里都可以更新客户的信息
 func (s *BusinessExtServer) UpdateUser(ctx context.Context, req *pb.UpdateUserReq) (*emptypb.Empty, error) {
-	userId, _, err := grpclib.GetCtxData(ctx)
-	if err != nil {
-		return nil, err
-	}
-	err = app2.UserApp.Update(ctx, userId, req)
+	// userId, _, err := grpclib.GetCtxData(ctx)
+	// if err != nil {
+	//     return nil, err
+	// }
+	err := app2.UserApp.Update(ctx, req.UserId, req)
 	return new(emptypb.Empty), err
 }
 
