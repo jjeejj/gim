@@ -103,6 +103,7 @@ message Friend {
   string user_extra = 6; // 用户附加字段
   string remarks = 7; // 备注
   string extra = 8; // 附加字段
+  string phone = 9; // 手机号
 }
 message GetFriendsResp {
   repeated Friend friends = 1;

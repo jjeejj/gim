@@ -49,6 +49,7 @@ func (s *service) List(ctx context.Context, userId string) ([]*pb.Friend, error)
 			friend.Sex = user.Sex
 			friend.AvatarUrl = user.AvatarUrl
 			friend.UserExtra = user.Extra
+			friend.Phone = user.Phone
 		}
 		infos[i] = &friend
 	}
