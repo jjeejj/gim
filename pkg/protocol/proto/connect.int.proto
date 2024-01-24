@@ -13,6 +13,7 @@ service ConnectInt {
 message DeliverMessageReq {
   int64 device_id = 1; // 设备id
   Message message = 2; // 数据
+  string user_id = 3; // 投递的用户
 }
 
 // 房间推送

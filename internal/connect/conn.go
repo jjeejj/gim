@@ -3,10 +3,12 @@ package connect
 import (
 	"container/list"
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
 	"gim/config"
+	_const "gim/pkg/const"
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
@@ -70,7 +72,7 @@ func (c *Conn) WriteToWS(bytes []byte) error {
 func (c *Conn) Close() error {
 	// 取消设备和连接的对应关系
 	if c.DeviceId != 0 {
-		DeleteConn(c.DeviceId)
+		DeleteConn(fmt.Sprintf(_const.CONN_MAP_KEY_FMT, c.UserId, c.DeviceId))
 	}
 
 	// 取消订阅，需要异步出去，防止重复加锁造成死锁
@@ -196,7 +198,7 @@ func (c *Conn) SignIn(input *pb.Input) {
 
 	c.UserId = signIn.UserId
 	c.DeviceId = signIn.DeviceId
-	SetConn(signIn.DeviceId, c)
+	SetConn(fmt.Sprintf(_const.CONN_MAP_KEY_FMT, signIn.UserId, signIn.DeviceId), c)
 }
 
 // Sync 消息同步

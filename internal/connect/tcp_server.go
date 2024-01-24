@@ -2,8 +2,10 @@ package connect
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	_const "gim/pkg/const"
 	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 	"gim/pkg/rpc"
@@ -62,7 +64,7 @@ func (*handler) OnClose(c *gn.Conn, err error) {
 	logger.Logger.Debug("close", zap.String("addr", c.GetAddr()), zap.String("user_id", conn.UserId),
 		zap.Int64("device_id", conn.DeviceId), zap.Error(err))
 
-	DeleteConn(conn.DeviceId)
+	DeleteConn(fmt.Sprintf(_const.CONN_MAP_KEY_FMT, conn.UserId, conn.DeviceId))
 
 	if conn.UserId != "" {
 		_, _ = rpc.GetLogicIntClient().Offline(context.TODO(), &pb.OfflineReq{

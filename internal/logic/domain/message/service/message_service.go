@@ -113,7 +113,7 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 			continue
 		}
 
-		err = MessageService.SendToDevice(ctx, devices[i], message)
+		err = MessageService.SendToDevice(ctx, devices[i], toUserID, message)
 		if err != nil {
 			logger.Sugar.Error(err, zap.Any("SendToUser error", devices[i]), zap.Error(err))
 		}
@@ -122,8 +122,9 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 }
 
 // SendToDevice 将消息发送给设备
-func (*messageService) SendToDevice(ctx context.Context, device *pb.Device, message *pb.Message) error {
+func (*messageService) SendToDevice(ctx context.Context, device *pb.Device, userId string, message *pb.Message) error {
 	_, err := rpc.GetConnectIntClient().DeliverMessage(picker.ContextWithAddr(ctx, device.ConnAddr), &pb.DeliverMessageReq{
+		UserId:   userId,
 		DeviceId: device.DeviceId,
 		Message:  message,
 	})

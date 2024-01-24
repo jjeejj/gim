@@ -7,16 +7,17 @@ import (
 )
 
 // ConnsManager 全局链接 map 维护
+// key userid_deviceid
 var ConnsManager = sync.Map{}
 
 // SetConn 存储
-func SetConn(deviceId int64, conn *Conn) {
-	ConnsManager.Store(deviceId, conn)
+func SetConn(key string, conn *Conn) {
+	ConnsManager.Store(key, conn)
 }
 
 // GetConn 根据设备id获取 对应的连接
-func GetConn(deviceId int64) *Conn {
-	value, ok := ConnsManager.Load(deviceId)
+func GetConn(key string) *Conn {
+	value, ok := ConnsManager.Load(key)
 	if ok {
 		return value.(*Conn)
 	}
@@ -24,8 +25,8 @@ func GetConn(deviceId int64) *Conn {
 }
 
 // DeleteConn 删除
-func DeleteConn(deviceId int64) {
-	ConnsManager.Delete(deviceId)
+func DeleteConn(key string) {
+	ConnsManager.Delete(key)
 }
 
 // PushAll 全服推送
