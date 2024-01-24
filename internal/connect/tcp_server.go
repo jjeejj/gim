@@ -26,10 +26,10 @@ func StartTCPServer(addr string) {
 	var err error
 	server, err = gn.NewServer(addr, &handler{},
 		gn.WithDecoder(codec.NewUvarintDecoder()),
-		gn.WithEncoder(codec.NewUvarintEncoder(1024)),
-		gn.WithReadBufferLen(256),
+		gn.WithEncoder(codec.NewUvarintEncoder(4098)),
+		gn.WithReadBufferLen(4098),
 		gn.WithTimeout(11*time.Minute),
-		gn.WithAcceptGNum(10),
+		gn.WithAcceptGNum(50),
 		gn.WithIOGNum(100))
 	if err != nil {
 		logger.Sugar.Error(err)
