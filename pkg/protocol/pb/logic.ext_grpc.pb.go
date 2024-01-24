@@ -55,7 +55,7 @@ type LogicExtClient interface {
 	// 设置好友信息
 	SetFriend(ctx context.Context, in *SetFriendReq, opts ...grpc.CallOption) (*SetFriendResp, error)
 	// 获取好友列表
-	GetFriends(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetFriendsResp, error)
+	GetFriends(ctx context.Context, in *GetFriendsReq, opts ...grpc.CallOption) (*GetFriendsResp, error)
 	// 发送群组消息
 	SendMessageToGroup(ctx context.Context, in *SendMessageReq, opts ...grpc.CallOption) (*SendMessageResp, error)
 	// 创建群组
@@ -138,7 +138,7 @@ func (c *logicExtClient) SetFriend(ctx context.Context, in *SetFriendReq, opts .
 	return out, nil
 }
 
-func (c *logicExtClient) GetFriends(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetFriendsResp, error) {
+func (c *logicExtClient) GetFriends(ctx context.Context, in *GetFriendsReq, opts ...grpc.CallOption) (*GetFriendsResp, error) {
 	out := new(GetFriendsResp)
 	err := c.cc.Invoke(ctx, LogicExt_GetFriends_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -245,7 +245,7 @@ type LogicExtServer interface {
 	// 设置好友信息
 	SetFriend(context.Context, *SetFriendReq) (*SetFriendResp, error)
 	// 获取好友列表
-	GetFriends(context.Context, *emptypb.Empty) (*GetFriendsResp, error)
+	GetFriends(context.Context, *GetFriendsReq) (*GetFriendsResp, error)
 	// 发送群组消息
 	SendMessageToGroup(context.Context, *SendMessageReq) (*SendMessageResp, error)
 	// 创建群组
@@ -289,7 +289,7 @@ func (UnimplementedLogicExtServer) AgreeAddFriend(context.Context, *AgreeAddFrie
 func (UnimplementedLogicExtServer) SetFriend(context.Context, *SetFriendReq) (*SetFriendResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetFriend not implemented")
 }
-func (UnimplementedLogicExtServer) GetFriends(context.Context, *emptypb.Empty) (*GetFriendsResp, error) {
+func (UnimplementedLogicExtServer) GetFriends(context.Context, *GetFriendsReq) (*GetFriendsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFriends not implemented")
 }
 func (UnimplementedLogicExtServer) SendMessageToGroup(context.Context, *SendMessageReq) (*SendMessageResp, error) {
@@ -441,7 +441,7 @@ func _LogicExt_SetFriend_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _LogicExt_GetFriends_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetFriendsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -453,7 +453,7 @@ func _LogicExt_GetFriends_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: LogicExt_GetFriends_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LogicExtServer).GetFriends(ctx, req.(*emptypb.Empty))
+		return srv.(LogicExtServer).GetFriends(ctx, req.(*GetFriendsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

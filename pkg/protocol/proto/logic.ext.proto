@@ -20,7 +20,7 @@ service LogicExt {
   // 设置好友信息
   rpc SetFriend (SetFriendReq) returns (SetFriendResp);
   // 获取好友列表
-  rpc GetFriends (google.protobuf.Empty) returns (GetFriendsResp);
+  rpc GetFriends (GetFriendsReq) returns (GetFriendsResp);
 
   // 发送群组消息
   rpc SendMessageToGroup (SendMessageReq) returns (SendMessageResp);
@@ -105,6 +105,11 @@ message Friend {
   string extra = 8; // 附加字段
   string phone = 9; // 手机号
 }
+
+message GetFriendsReq {
+  string user_id = 1; // 用户业务id
+}
+
 message GetFriendsResp {
   repeated Friend friends = 1;
 }

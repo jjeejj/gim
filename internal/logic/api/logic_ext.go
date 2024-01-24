@@ -91,12 +91,12 @@ func (s *LogicExtServer) SetFriend(ctx context.Context, req *pb.SetFriendReq) (*
 	return &pb.SetFriendResp{}, nil
 }
 
-func (s *LogicExtServer) GetFriends(ctx context.Context, in *emptypb.Empty) (*pb.GetFriendsResp, error) {
-	userId, _, err := grpclib.GetCtxData(ctx)
-	if err != nil {
-		return nil, err
-	}
-	friends, err := friend.App.List(ctx, userId)
+func (s *LogicExtServer) GetFriends(ctx context.Context, in *pb.GetFriendsReq) (*pb.GetFriendsResp, error) {
+	// userId, _, err := grpclib.GetCtxData(ctx)
+	// if err != nil {
+	//     return nil, err
+	// }
+	friends, err := friend.App.List(ctx, in.UserId)
 	return &pb.GetFriendsResp{Friends: friends}, err
 }
 

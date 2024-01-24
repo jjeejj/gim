@@ -1,16 +1,13 @@
 package connect
 
 import (
-	"context"
 	"fmt"
 	"time"
 
+	"github.com/alberliu/gn/codec"
+
 	_const "gim/pkg/const"
 	"gim/pkg/logger"
-	"gim/pkg/protocol/pb"
-	"gim/pkg/rpc"
-
-	"github.com/alberliu/gn/codec"
 
 	"go.uber.org/zap"
 
@@ -66,11 +63,11 @@ func (*handler) OnClose(c *gn.Conn, err error) {
 
 	DeleteConn(fmt.Sprintf(_const.CONN_MAP_KEY_FMT, conn.UserId, conn.DeviceId))
 
-	if conn.UserId != "" {
-		_, _ = rpc.GetLogicIntClient().Offline(context.TODO(), &pb.OfflineReq{
-			UserId:     conn.UserId,
-			DeviceId:   conn.DeviceId,
-			ClientAddr: c.GetAddr(),
-		})
-	}
+	// if conn.UserId != "" {
+	// 	_, _ = rpc.GetLogicIntClient().Offline(context.TODO(), &pb.OfflineReq{
+	// 		UserId:     conn.UserId,
+	// 		DeviceId:   conn.DeviceId,
+	// 		ClientAddr: c.GetAddr(),
+	// 	})
+	// }
 }
