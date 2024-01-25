@@ -49,13 +49,14 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 
 // AddFriend 添加好友
 // 判断还有是否存在
+// 修改为不需要同意，直接就通过了
 func (s *LogicExtServer) AddFriend(ctx context.Context, in *pb.AddFriendReq) (*emptypb.Empty, error) {
-	userId, _, err := grpclib.GetCtxData(ctx)
-	if err != nil {
-		return nil, err
-	}
+	// userId, _, err := grpclib.GetCtxData(ctx)
+	// if err != nil {
+	//     return nil, err
+	// }
 
-	err = friend.App.AddFriend(ctx, userId, in.FriendId, in.Remarks, in.Description)
+	err := friend.App.AddFriend(ctx, in.UserId, in.FriendId, in.Remarks, in.Description)
 	if err != nil {
 		return nil, err
 	}

@@ -56,7 +56,7 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 			// logger.Logger.Info("sonic.Unmarshal msgContent success", zap.Any("msgContent", msgContent))
 		}
 	}
-
+	logger.Logger.Debug("conn info", zap.Any("conn", conn))
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
 }

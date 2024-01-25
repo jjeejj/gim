@@ -86,7 +86,7 @@ func (*service) AddFriend(ctx context.Context, userId, friendId string, remarks,
 		UserId:     userId,
 		FriendId:   friendId,
 		Remarks:    remarks,
-		Status:     FriendStatusApply,
+		Status:     FriendStatusAgree, // 适配业务，可以自由修改
 		CreateTime: now,
 		UpdateTime: now,
 	})

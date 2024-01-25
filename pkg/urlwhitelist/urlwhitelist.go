@@ -10,4 +10,5 @@ var Logic = map[string]int{
 	"/pb.LogicExt/RegisterDevice": 0,
 	"/pb.LogicExt/GetFriends":     0,
 	"/pb.LogicExt/GetFriend":      0,
+	"/pb.LogicExt/AddFriend":      0,
 }
