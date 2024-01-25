@@ -31,7 +31,7 @@ func main() {
 	}()
 
 	// 启动服务订阅
-	connect.StartSubscribe()
+	// connect.StartSubscribe()
 
 	server := grpc.NewServer(grpc.UnaryInterceptor(interceptor.NewInterceptor("connect_interceptor", nil)))
 

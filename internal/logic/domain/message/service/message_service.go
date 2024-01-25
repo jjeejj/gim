@@ -18,7 +18,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const MessageLimit = 50 // 最大消息同步数量
+const MessageLimit = 10 // 最大消息同步数量
 
 const MaxSyncBufLen = 65536 // 最大字节数组长度
 
