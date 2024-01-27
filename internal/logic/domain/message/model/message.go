@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
 	"gim/pkg/protocol/pb"
@@ -18,13 +17,14 @@ type Message struct {
 	Seq       int64     // 消息同步序列
 	SendTime  time.Time // 消息发送时间
 	Status    int32     // 创建时间
+	UserSeq   string    // 消息的 唯一id
 }
 
 func (m *Message) MessageToPB() *pb.Message {
 	return &pb.Message{
 		Code:     m.Code,
 		Content:  m.Content,
-		UserSeq:  fmt.Sprintf("%s_%d", m.UserId, m.Seq),
+		UserSeq:  m.UserSeq,
 		Seq:      m.Seq,
 		SendTime: util.UnixMilliTime(m.SendTime),
 		Status:   pb.MessageStatus(m.Status),

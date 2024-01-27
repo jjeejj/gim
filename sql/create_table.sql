@@ -132,6 +132,7 @@ CREATE TABLE `message`
     `code`        tinyint(4) NOT NULL COMMENT '消息类型',
     `content`     blob     NOT NULL COMMENT '消息内容',
     `seq`         bigint(20) unsigned NOT NULL COMMENT '消息序列号',
+    `user_seq`    varchar(512)  COMMENT '消息唯一序列号',
     `send_time`   datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP (3) COMMENT '消息发送时间',
     `status`      tinyint(255) NOT NULL DEFAULT '0' COMMENT '消息状态，0：未处理1：消息撤回',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

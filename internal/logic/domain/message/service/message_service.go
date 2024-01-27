@@ -90,6 +90,7 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 			Code:      message.Code,
 			Content:   message.Content,
 			Seq:       seq,
+			UserSeq:   message.UserSeq,
 			SendTime:  util.UnunixMilliTime(message.SendTime),
 			Status:    int32(pb.MessageStatus_MS_NORMAL),
 		}
