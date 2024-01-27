@@ -4,9 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bytedance/sonic"
-	"google.golang.org/protobuf/proto"
-
 	_const "gim/pkg/const"
 	"gim/pkg/grpclib"
 	"gim/pkg/logger"
@@ -37,25 +34,7 @@ func (s *ConnIntServer) DeliverMessage(ctx context.Context, req *pb.DeliverMessa
 		return resp, nil
 	}
 	logger.Logger.Warn("req.Message", zap.Any("req.Message", req.Message))
-	// 反序列化，填充 社交id
-	userMessagePus := &pb.UserMessagePush{}
-	err := proto.Unmarshal(req.Message.Content, userMessagePus)
-	if err != nil {
-		logger.Logger.Warn("sonic.Unmarshal userMessagePus error", zap.Error(err))
-		// return resp, nil
-	} else {
-		// logger.Logger.Info("sonic.Unmarshal userMessagePus success", zap.Any("userMessagePus", userMessagePus))
-		msgContent := &pb.GimMessage{}
-		err = sonic.Unmarshal(userMessagePus.Content, msgContent)
-		if err != nil {
-			logger.Logger.Warn("sonic.Unmarshal msgContent error", zap.Error(err))
-		} else {
-			msgContent.SocialMsgId = req.Message.UserSeq
-			userMessagePus.Content, _ = sonic.Marshal(msgContent)
-			req.Message.Content, _ = proto.Marshal(userMessagePus)
-			// logger.Logger.Info("sonic.Unmarshal msgContent success", zap.Any("msgContent", msgContent))
-		}
-	}
+
 	logger.Logger.Debug("conn info", zap.Any("conn", conn))
 	conn.Send(pb.PackageType_PT_MESSAGE, grpclib.GetCtxRequestId(ctx), req.Message, nil)
 	return resp, nil
