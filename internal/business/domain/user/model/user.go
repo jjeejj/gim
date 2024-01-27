@@ -32,6 +32,7 @@ func (u *User) ToProto() *pb.User {
 		Sex:        u.Sex,
 		AvatarUrl:  u.AvatarUrl,
 		Extra:      u.Extra,
+		Phone:      u.Phone,
 		CreateTime: u.CreateTime.Unix(),
 		UpdateTime: u.UpdateTime.Unix(),
 	}
