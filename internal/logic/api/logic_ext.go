@@ -131,7 +131,7 @@ func (*LogicExtServer) CreateGroup(ctx context.Context, in *pb.CreateGroupReq) (
 	return &pb.CreateGroupResp{GroupId: groupId}, err
 }
 
-// UpdateGroup 更新群组
+// UpdateGroup 更新群组，这里只更新基础的信息
 func (*LogicExtServer) UpdateGroup(ctx context.Context, in *pb.UpdateGroupReq) (*emptypb.Empty, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -147,7 +147,7 @@ func (*LogicExtServer) GetGroup(ctx context.Context, in *pb.GetGroupReq) (*pb.Ge
 	return &pb.GetGroupResp{Group: group}, err
 }
 
-// GetGroups 获取用户加入的所有群组
+// GetGroups 获取当前用户加入的所有群组
 // 不包含群成员信息
 func (*LogicExtServer) GetGroups(ctx context.Context, in *emptypb.Empty) (*pb.GetGroupsResp, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
@@ -171,11 +171,13 @@ func (s *LogicExtServer) AddGroupMembers(ctx context.Context, in *pb.AddGroupMem
 }
 
 // UpdateGroupMember 更新群组成员信息
+// 针对的是已经在群组中的用户 进行更更新：成员类型，备注，附加字段 这些信息
 func (*LogicExtServer) UpdateGroupMember(ctx context.Context, in *pb.UpdateGroupMemberReq) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, group.App.UpdateMember(ctx, in)
 }
 
-// DeleteGroupMember 添加群组成员
+// DeleteGroupMember 删除群组成员
+// 这里只能单个成员进行删除
 func (*LogicExtServer) DeleteGroupMember(ctx context.Context, in *pb.DeleteGroupMemberReq) (*emptypb.Empty, error) {
 	userId, _, err := grpclib.GetCtxData(ctx)
 	if err != nil {
@@ -187,6 +189,7 @@ func (*LogicExtServer) DeleteGroupMember(ctx context.Context, in *pb.DeleteGroup
 }
 
 // GetGroupMembers 获取群组成员信息
+// 不分页，直接获取的
 func (s *LogicExtServer) GetGroupMembers(ctx context.Context, in *pb.GetGroupMembersReq) (*pb.GetGroupMembersResp, error) {
 	members, err := group.App.GetMembers(ctx, in.GroupId)
 	return &pb.GetGroupMembersResp{Members: members}, err

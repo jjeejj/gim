@@ -62,7 +62,10 @@ func (*app) Update(ctx context.Context, userId string, update *pb.UpdateGroupReq
 	if err != nil {
 		return err
 	}
+	// 删除对应的缓存信息
+	_ = repo.GroupCache.Del(update.GroupId)
 
+	// 推送更新群基础的事件
 	err = group.PushUpdate(ctx, userId)
 	if err != nil {
 		return err
@@ -71,12 +74,13 @@ func (*app) Update(ctx context.Context, userId string, update *pb.UpdateGroupReq
 }
 
 // AddMembers 添加群组成员
+// 返回本地添加成功的用户 id 列表
 func (*app) AddMembers(ctx context.Context, userId, groupId string, userIds []string) ([]string, error) {
 	group, err := repo.GroupRepo.Get(groupId)
 	if err != nil {
 		return nil, err
 	}
-	existIds, addedIds, err := group.AddMembers(ctx, userIds)
+	_, addedIds, err := group.AddMembers(ctx, userIds)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +93,7 @@ func (*app) AddMembers(ctx context.Context, userId, groupId string, userIds []st
 	if err != nil {
 		return nil, err
 	}
-	return existIds, nil
+	return addedIds, nil
 }
 
 // UpdateMember 更新群组用户

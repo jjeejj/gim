@@ -30,6 +30,7 @@ func (c *groupCache) Get(groupId string) (*entity.Group, error) {
 }
 
 // Set 设置群组缓存
+// 有效期为 24h
 func (c *groupCache) Set(group *entity.Group) error {
 	err := db.RedisUtil.Set(GroupKey+group.GroupId, group, 24*time.Hour)
 	if err != nil {

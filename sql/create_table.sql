@@ -57,6 +57,7 @@ CREATE TABLE `group`
     `extra`        varchar(1024) NOT NULL COMMENT '附加属性',
     `create_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_use_id` varchar(255)  NOT NULL default '' COMMENT '创建者id, 如果是系统创建就是空',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_group_id` (`group_id`)
 ) ENGINE = InnoDB

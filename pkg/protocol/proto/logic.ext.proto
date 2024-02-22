@@ -151,6 +151,7 @@ message Group {
   int64 create_time = 7; // 创建时间
   int64 update_time = 8; // 更新时间
   int64 id = 9; // 数据库的主键id, 一般外部不实用
+  string create_user_id = 10; // 创建群主的用户 id
 }
 
 message GetGroupsResp {
@@ -169,6 +170,7 @@ enum MemberType {
   GMT_UNKNOWN = 0; // 未知
   GMT_ADMIN = 1; // 管理员
   GMT_MEMBER = 2; // 成员
+  GMT_OWNER = 3; // 群主
 }
 
 message UpdateGroupMemberReq {

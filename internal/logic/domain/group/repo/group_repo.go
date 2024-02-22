@@ -8,7 +8,7 @@ type groupRepo struct{}
 
 var GroupRepo = new(groupRepo)
 
-// Get 获取群组信息
+// Get 获取群组信息, 包含群成员信息
 func (*groupRepo) Get(groupId string) (*entity.Group, error) {
 	group, err := GroupCache.Get(groupId)
 	if err != nil {
@@ -36,6 +36,7 @@ func (*groupRepo) Get(groupId string) (*entity.Group, error) {
 }
 
 // Save 保存群组信息
+// 1. 群基础信息 2. 群成员信息
 func (*groupRepo) Save(group *entity.Group) error {
 	groupId := group.GroupId
 	var err error
@@ -47,6 +48,7 @@ func (*groupRepo) Save(group *entity.Group) error {
 			if err != nil {
 				return err
 			}
+			// TODO 这里的逻辑有问题，把新用户添加到群组中，会把旧的用户在添加一遍
 			group.UserNum += 1
 		}
 		if members[i].UpdateType == entity.UpdateTypeDelete {

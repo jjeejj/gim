@@ -35,6 +35,7 @@ type Group struct {
 	CreateTime   time.Time   // 创建时间
 	UpdateTime   time.Time   // 更新时间
 	Members      []GroupUser `gorm:"-"` // 群组成员
+	CreateUseId  string      // 创建人id
 }
 
 type GroupUser struct {
@@ -68,6 +69,8 @@ func (g *Group) ToProto() *pb.Group {
 	}
 }
 
+// CreateGroup 处理群组创建的逻辑
+// 目前没有群主的概念，只有群管理员。 创建人默认就是群主
 func CreateGroup(userId string, in *pb.CreateGroupReq) *Group {
 	now := time.Now()
 	group := &Group{
@@ -80,6 +83,7 @@ func CreateGroup(userId string, in *pb.CreateGroupReq) *Group {
 		UserNum:      int32(len(in.MemberIds) + 1),
 		CreateTime:   now,
 		UpdateTime:   now,
+		CreateUseId:  userId,
 	}
 
 	// 创建者添加为管理员
@@ -245,6 +249,7 @@ func (g *Group) GetMembers(ctx context.Context) ([]*pb.GroupMember, error) {
 }
 
 // AddMembers 给群组添加用户
+// 更新需要添加到群的用户，返回之前存在的用户 和将要添加到群组的用户 id 列表
 func (g *Group) AddMembers(ctx context.Context, userIds []string) ([]string, []string, error) {
 	var existIds []string
 	var addedIds []string
