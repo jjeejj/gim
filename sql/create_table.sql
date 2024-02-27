@@ -62,7 +62,7 @@ CREATE TABLE `group`
     UNIQUE KEY `uk_group_id` (`group_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT ='群组';
+  COLLATE = utf8mb4_general_ci COMMENT ='群组';
 
 -- ----------------------------
 -- Table structure for group_user

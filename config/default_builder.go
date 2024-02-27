@@ -24,13 +24,13 @@ func (*defaultBuilder) Build() Configuration {
 	logger.Target = logger.Console
 
 	return Configuration{
-		MySQL:                "jhim:Szyw@2023@tcp(172.16.100.101:3306)/gim?charset=utf8&parseTime=true",
-		RedisHost:            "172.16.100.101:6379",
+		MySQL:                "root:Ywkj@2023@tcp(192.168.100.101:3306)/gim?charset=utf8mb4&parseTime=true",
+		RedisHost:            "192.168.100.101:3001",
 		RedisPassword:        "",
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
 
-		ConnectLocalAddr:     "172.16.100.101:40000",
+		ConnectLocalAddr:     "192.168.100.101:40000",
 		ConnectRPCListenAddr: ":40000",
 		ConnectTCPListenAddr: ":40001",
 		ConnectWSListenAddr:  ":40002",
@@ -40,7 +40,7 @@ func (*defaultBuilder) Build() Configuration {
 		FileHTTPListenAddr:    "40030",
 
 		ConnectIntClientBuilder: func() pb.ConnectIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///172.16.100.101:40000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, picker.AddrPickerName)))
 			if err != nil {
 				panic(err)
@@ -48,7 +48,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewConnectIntClient(conn)
 		},
 		LogicIntClientBuilder: func() pb.LogicIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///172.16.100.101:40010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
@@ -56,7 +56,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewLogicIntClient(conn)
 		},
 		BusinessIntClientBuilder: func() pb.BusinessIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///172.16.100.101:40020", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40020", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
