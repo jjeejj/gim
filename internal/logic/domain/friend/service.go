@@ -181,7 +181,7 @@ func (*service) SendToFriend(ctx context.Context, fromDeviceID int64, fromUserID
 		Content:  bytes,
 		SendTime: req.SendTime,
 	}
-	// 给发送着通知
+	// 给发送着通知，发送者的其他设备
 	seq, err := proxy.MessageProxy.SendToUser(ctx, fromDeviceID, fromUserID, msg, true)
 	if err != nil {
 		logger.Logger.Error("send message to send user other device error", zap.Error(err))

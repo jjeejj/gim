@@ -100,20 +100,17 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 			return 0, err
 		}
 	}
-
 	// 查询用户在线设备
 	devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, toUserID)
 	if err != nil {
 		logger.Sugar.Error(err)
 		return 0, err
 	}
-
 	for i := range devices {
-		// 消息不需要投递给发送消息的设备
-		if fromDeviceID == devices[i].DeviceId {
-			continue
-		}
-
+		// 消息不需要投递给发送消息的设备, 自己发送的也要推送
+		// if fromDeviceID == devices[i].DeviceId {
+		//     continue
+		// }
 		err = MessageService.SendToDevice(ctx, devices[i], toUserID, message)
 		if err != nil {
 			logger.Sugar.Error(err, zap.Any("SendToUser error", devices[i]), zap.Error(err))
