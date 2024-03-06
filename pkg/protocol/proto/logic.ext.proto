@@ -54,6 +54,7 @@ message RegisterDeviceResp {
   int64 device_id = 1; // 设备id
 }
 
+// TODO 这里应该有一个唯一的标识，防止同一条消息发送 2 次
 message SendMessageReq {
   string receiver_id = 1; // 接收者ID，用户ID/群组ID
   bytes content = 2; // 消息内容

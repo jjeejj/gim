@@ -1,0 +1,10 @@
+MySQL = "root:Ywkj@2023@tcp(192.168.100.101:3306)/gim?charset=utf8mb4&parseTime=true" # mysql 连接地址
+RedisHost = "192.168.100.101:3001" # redis 连接地址
+RedisPassword = "" # redis 密码
+ConnectRPCListenHost = "192.168.100.101"
+ConnectRPCListenPort = ":40000"
+LogicRPCListenHost = "192.168.100.101"
+LogicRPCListenPort = ":40010"
+BusinessRPCListenHost = "192.168.100.101"
+BusinessRPCListenPort = ":40020"
+ConnectTCPListenAddr = "192.168.100.101:40001"

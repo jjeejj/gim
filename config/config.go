@@ -2,9 +2,10 @@ package config
 
 import (
 	"context"
+	"os"
+
 	"gim/pkg/gerrors"
 	"gim/pkg/protocol/pb"
-	"os"
 
 	"google.golang.org/grpc"
 )
@@ -39,6 +40,19 @@ type Configuration struct {
 	ConnectIntClientBuilder  func() pb.ConnectIntClient
 	LogicIntClientBuilder    func() pb.LogicIntClient
 	BusinessIntClientBuilder func() pb.BusinessIntClient
+}
+
+type FileConfig struct {
+	MySQL                 string
+	RedisHost             string
+	RedisPassword         string
+	ConnectRPCListenHost  string
+	ConnectRPCListenPort  string
+	LogicRPCListenHost    string
+	LogicRPCListenPort    string
+	BusinessRPCListenHost string
+	BusinessRPCListenPort string
+	ConnectTCPListenAddr  string
 }
 
 func init() {

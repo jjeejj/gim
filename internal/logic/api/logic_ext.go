@@ -3,12 +3,16 @@ package api
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"go.uber.org/zap"
 
 	"gim/internal/logic/domain/device"
 	"gim/internal/logic/domain/friend"
 	"gim/internal/logic/domain/group"
 	"gim/internal/logic/domain/room"
 	"gim/pkg/grpclib"
+	"gim/pkg/logger"
 	"gim/pkg/protocol/pb"
 
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -32,6 +36,7 @@ func (s *LogicExtServer) PushRoom(ctx context.Context, req *pb.PushRoomReq) (*em
 // SendMessageToFriend 发送好友消息
 // 返回的序列为：userID+seq
 func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessageReq) (*pb.SendMessageResp, error) {
+	logger.Logger.Debug("start send message:", zap.String("time", time.Now().String()))
 	userId, deviceId, err := grpclib.GetCtxData(ctx)
 	if err != nil {
 		return nil, err
@@ -41,6 +46,7 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 	if err != nil {
 		return nil, err
 	}
+	logger.Logger.Debug("end send message:", zap.String("time", time.Now().String()))
 	return &pb.SendMessageResp{
 		Seq:     seq,
 		UserSeq: fmt.Sprintf("%s_%d", userId, seq),

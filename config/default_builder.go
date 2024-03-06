@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/spf13/viper"
 	"google.golang.org/grpc/balancer/roundrobin"
 
 	"gim/pkg/grpclib/picker"
@@ -19,28 +20,52 @@ import (
 
 type defaultBuilder struct{}
 
+// loadFileConfig 加载本地配置文件的配置
+func loadFileConfig() (*FileConfig, error) {
+	viper.SetConfigName("config")
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(".")  // 编译之后的搜索路径
+	viper.AddConfigPath("..") // 开发时候用的搜索路径
+	// 加载配置文件
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("read config file error: %s", err)
+	}
+	// 解析配置
+	var cfg FileConfig
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return nil, fmt.Errorf("unable to decode into struct, %v", err)
+	}
+	logger.Logger.Info("load config file success", zap.Any("config", cfg))
+	return &cfg, nil
+}
+
 func (*defaultBuilder) Build() Configuration {
 	logger.Level = zap.DebugLevel
 	logger.Target = logger.Console
 
+	// 加载配置文件
+	cfg, err := loadFileConfig()
+	if err != nil {
+		logger.Logger.Fatal("load config file error", zap.Error(err))
+	}
 	return Configuration{
-		MySQL:                "root:Ywkj@2023@tcp(192.168.100.101:3306)/gim?charset=utf8mb4&parseTime=true",
-		RedisHost:            "192.168.100.101:3001",
-		RedisPassword:        "",
+		MySQL:                cfg.MySQL,
+		RedisHost:            cfg.RedisHost,
+		RedisPassword:        cfg.RedisPassword,
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
 
-		ConnectLocalAddr:     "192.168.100.101:40000",
-		ConnectRPCListenAddr: ":40000",
-		ConnectTCPListenAddr: ":40001",
-		ConnectWSListenAddr:  ":40002",
+		// ConnectLocalAddr:     "172.31.6.248:40000",
+		ConnectRPCListenAddr: cfg.ConnectRPCListenPort,
+		ConnectTCPListenAddr: cfg.ConnectTCPListenAddr,
+		// ConnectWSListenAddr:  "172.31.6.248:40002",
 
-		LogicRPCListenAddr:    ":40010",
-		BusinessRPCListenAddr: ":40020",
-		FileHTTPListenAddr:    "40030",
+		LogicRPCListenAddr:    cfg.LogicRPCListenPort,
+		BusinessRPCListenAddr: cfg.BusinessRPCListenPort,
+		// FileHTTPListenAddr:    "40030",
 
 		ConnectIntClientBuilder: func() pb.ConnectIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), fmt.Sprintf("addrs:///%s%s", cfg.ConnectRPCListenHost, cfg.ConnectRPCListenPort), grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, picker.AddrPickerName)))
 			if err != nil {
 				panic(err)
@@ -48,7 +73,8 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewConnectIntClient(conn)
 		},
 		LogicIntClientBuilder: func() pb.LogicIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40010", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+
+			conn, err := grpc.DialContext(context.TODO(), fmt.Sprintf("addrs:///%s%s", cfg.LogicRPCListenHost, cfg.LogicRPCListenPort), grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
@@ -56,7 +82,7 @@ func (*defaultBuilder) Build() Configuration {
 			return pb.NewLogicIntClient(conn)
 		},
 		BusinessIntClientBuilder: func() pb.BusinessIntClient {
-			conn, err := grpc.DialContext(context.TODO(), "addrs:///192.168.100.101:40020", grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
+			conn, err := grpc.DialContext(context.TODO(), fmt.Sprintf("addrs:///%s%s", cfg.BusinessRPCListenHost, cfg.BusinessRPCListenPort), grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
 				grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, roundrobin.Name)))
 			if err != nil {
 				panic(err)
