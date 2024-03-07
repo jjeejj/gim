@@ -26,9 +26,9 @@ func main() {
 	}()
 
 	// 启动WebSocket长链接服务器
-	go func() {
-		connect.StartWSServer(config.Config.ConnectWSListenAddr)
-	}()
+	// go func() {
+	// 	connect.StartWSServer(config.Config.ConnectWSListenAddr)
+	// }()
 
 	// 启动服务订阅
 	// connect.StartSubscribe()
