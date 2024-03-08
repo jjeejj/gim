@@ -17,8 +17,6 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
-
-	logicNsq "gim/internal/logic/nsq"
 )
 
 const MessageLimit = 10 // 最大消息同步数量
@@ -109,7 +107,7 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 		logger.Sugar.Error(err)
 		return 0, err
 	}
-	err = logicNsq.Producer.Publish(_const.SEND_MESSAGE_TOPIC_NAME, nsqMessageByte)
+	err = Producer.Publish(_const.SEND_MESSAGE_TOPIC_NAME, nsqMessageByte)
 	if err != nil {
 		logger.Logger.Error("snq push message err", zap.Error(err))
 	}

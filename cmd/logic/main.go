@@ -10,7 +10,6 @@ import (
 	"gim/internal/logic/api"
 	"gim/internal/logic/domain/device"
 	"gim/internal/logic/domain/message"
-	"gim/internal/logic/nsq"
 	"gim/internal/logic/proxy"
 	"gim/pkg/interceptor"
 	"gim/pkg/logger"
@@ -44,11 +43,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	go func() {
-		// 初始化对应的配置
-		nsq.InitNsq()
-	}()
 
 	logger.Logger.Info("rpc服务已经开启", zap.String("addr", config.Config.LogicRPCListenAddr))
 	err = server.Serve(listen)
