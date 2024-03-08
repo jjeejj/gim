@@ -15,13 +15,13 @@ run_all:
 	make connect
 
 build_business:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_business_srv $(CMDDIR)/business/main.go -gcflags=-trimpath=${CMDDIR} -asmflags=-trimpath=${CMDDIR}
+	GOOS=linux GOARCH=amd64 go build -gcflags=-trimpath=$(CMDDIR)  -asmflags=-trimpath=$(CMDDIR) -o ./bin/gim_business_srv $(CMDDIR)/business/main.go
 
 build_logic:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_logic_srv $(CMDDIR)/logic/main.go -gcflags=-trimpath=${CMDDIR} -asmflags=-trimpath=${CMDDIR}
+	GOOS=linux GOARCH=amd64 go build  -gcflags=-trimpath=${CMDDIR} -asmflags=-trimpath=${CMDDIR} -o ./bin/gim_logicc_srv $(CMDDIR)/logic/main.go
 	#mkdir bin
 #	serverName=gim_logic_srv
-#    echo "build $(serverName) start"
+#    echo "build $(serverName) sta
 
 #  	buildVersion="$(git rev-parse --abbrev-ref HEAD)_$(git rev-parse --short HEAD)";
 #  	buildTime="$(date -u '+%Y-%m-%dT%H:%M:%SZ')";
@@ -30,7 +30,7 @@ build_logic:
 #  	GOOS=linux GOARCH=amd64 go build -o ./bin/${serverName} -ldflags "-w -X 'main.BuildGoVersion=${buildGoVersion}' -X 'main.BuildVersion=${buildVersion}' -X 'main.BuildTime=${buildTime}' -X 'main.BuildCommit=${buildCommit}'" $(CMDDIR)/logic/main.go;
 
 build_connect:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/gim_connect_srv $(CMDDIR)/connect/main.go -gcflags=-trimpath=${CMDDIR} -asmflags=-trimpath=${CMDDIR}
+	GOOS=linux GOARCH=amd64 go build -gcflags=-trimpath=${CMDDIR}-asmflags=-trimpath=${CMDDIR} -o ./bin/gim_connect_srv $(CMDDIR)/connect/main.go
 
 build_all:
 	make build_business

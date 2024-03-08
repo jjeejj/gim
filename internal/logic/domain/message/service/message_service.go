@@ -102,7 +102,10 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 		}
 	}
 	// 保存消息之后，推送消息到发送队列
-	nsqMessageByte, err := json.Marshal(NsgMessage{})
+	nsqMessageByte, err := json.Marshal(NsgMessage{
+		message:  message,
+		toUserID: toUserID,
+	})
 	if err != nil {
 		logger.Sugar.Error(err)
 		return 0, err
