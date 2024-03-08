@@ -8,3 +8,8 @@ LogicRPCListenPort = ":40010"
 BusinessRPCListenHost = "192.168.110.238"
 BusinessRPCListenPort = ":40020"
 ConnectTCPListenAddr = "0.0.0.0:40001"
+
+[Nsq]
+NsqdHost = "127.0.0.1:4150"
+NsqLookUpdsHost = ["127.0.0.1:4161"]
+

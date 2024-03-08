@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"gim/internal/logic/domain/message/model"
 	"gim/internal/logic/domain/message/repo"
-	"gim/internal/logic/proxy"
+	_const "gim/pkg/const"
 	"gim/pkg/grpclib"
 	"gim/pkg/grpclib/picker"
 	"gim/pkg/logger"
@@ -16,6 +17,8 @@ import (
 
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
+
+	logicNsq "gim/internal/logic/nsq"
 )
 
 const MessageLimit = 10 // 最大消息同步数量
@@ -100,22 +103,32 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 			return 0, err
 		}
 	}
-	// 查询用户在线设备
-	devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, toUserID)
+	// 保存消息之后，推送消息到发送队列
+	nsqMessageByte, err := json.Marshal(NsgMessage{})
 	if err != nil {
 		logger.Sugar.Error(err)
 		return 0, err
 	}
-	for i := range devices {
-		// 消息不需要投递给发送消息的设备, 自己发送的也要推送
-		// if fromDeviceID == devices[i].DeviceId {
-		//     continue
-		// }
-		err = MessageService.SendToDevice(ctx, devices[i], toUserID, message)
-		if err != nil {
-			logger.Sugar.Error(err, zap.Any("SendToUser error", devices[i]), zap.Error(err))
-		}
+	err = logicNsq.Producer.Publish(_const.SEND_MESSAGE_TOPIC_NAME, nsqMessageByte)
+	if err != nil {
+		logger.Logger.Error("snq push message err", zap.Error(err))
 	}
+	// // 查询用户在线设备
+	// devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, toUserID)
+	// if err != nil {
+	//     logger.Sugar.Error(err)
+	//     return 0, err
+	// }
+	// for i := range devices {
+	//     // 消息不需要投递给发送消息的设备, 自己发送的也要推送
+	//     // if fromDeviceID == devices[i].DeviceId {
+	//     //     continue
+	//     // }
+	//     err = MessageService.SendToDevice(ctx, devices[i], toUserID, message)
+	//     if err != nil {
+	//         logger.Sugar.Error(err, zap.Any("SendToUser error", devices[i]), zap.Error(err))
+	//     }
+	// }
 	return seq, nil
 }
 

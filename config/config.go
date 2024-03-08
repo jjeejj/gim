@@ -40,6 +40,7 @@ type Configuration struct {
 	ConnectIntClientBuilder  func() pb.ConnectIntClient
 	LogicIntClientBuilder    func() pb.LogicIntClient
 	BusinessIntClientBuilder func() pb.BusinessIntClient
+	Nsq                      NsqConfig
 }
 
 type FileConfig struct {
@@ -53,6 +54,12 @@ type FileConfig struct {
 	BusinessRPCListenHost string
 	BusinessRPCListenPort string
 	ConnectTCPListenAddr  string
+	Nsq                   NsqConfig
+}
+
+type NsqConfig struct {
+	NsqdHost        string
+	NsqLookUpdsHost []string
 }
 
 func init() {

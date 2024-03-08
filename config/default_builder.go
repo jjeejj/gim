@@ -63,6 +63,7 @@ func (*defaultBuilder) Build() Configuration {
 		LogicRPCListenAddr:    cfg.LogicRPCListenPort,
 		BusinessRPCListenAddr: cfg.BusinessRPCListenPort,
 		// FileHTTPListenAddr:    "40030",
+		Nsq: cfg.Nsq,
 
 		ConnectIntClientBuilder: func() pb.ConnectIntClient {
 			conn, err := grpc.DialContext(context.TODO(), fmt.Sprintf("addrs:///%s%s", cfg.ConnectRPCListenHost, cfg.ConnectRPCListenPort), grpc.WithInsecure(), grpc.WithUnaryInterceptor(interceptor),
