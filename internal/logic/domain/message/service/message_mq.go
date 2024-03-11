@@ -78,8 +78,8 @@ func initNsqSendMessageChannelConsumer() *nsq.Consumer {
 
 // NsgMessage 发送到 nsq 队列中的 消息格式
 type NsgMessage struct {
-	message  *pb.Message
-	toUserID string
+	Message  *pb.Message `json:"message"`
+	ToUserID string      `json:"to_user_id"`
 }
 
 type sendMessageChannelHandler struct{}
@@ -100,7 +100,7 @@ func (c *sendMessageChannelHandler) HandleMessage(m *nsq.Message) error {
 	}
 	ctx := context.Background()
 	// 查询用户在线设备
-	devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, nsgMessage.toUserID)
+	devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, nsgMessage.ToUserID)
 	if err != nil {
 		logger.Sugar.Error(err)
 		return err
@@ -110,7 +110,7 @@ func (c *sendMessageChannelHandler) HandleMessage(m *nsq.Message) error {
 		// if fromDeviceID == devices[i].DeviceId {
 		//     continue
 		// }
-		err = MessageService.SendToDevice(ctx, devices[i], nsgMessage.toUserID, nsgMessage.message)
+		err = MessageService.SendToDevice(ctx, devices[i], nsgMessage.ToUserID, nsgMessage.Message)
 		if err != nil {
 			logger.Sugar.Error(err, zap.Any("SendToUser error", devices[i]), zap.Error(err))
 		}

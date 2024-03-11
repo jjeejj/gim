@@ -15,10 +15,10 @@ run_all:
 	make connect
 
 build_business:
-	GOOS=linux GOARCH=amd64 go build -gcflags=-trimpath=$(CMDDIR)  -asmflags=-trimpath=$(CMDDIR) -o ./bin/gim_business_srv $(CMDDIR)/business/main.go
+	GOOS=linux GOARCH=amd64 go build -trimpath -o ./bin/gim_business_srv $(CMDDIR)/business/main.go
 
 build_logic:
-	GOOS=linux GOARCH=amd64 go build  -gcflags=-trimpath=${CMDDIR} -asmflags=-trimpath=${CMDDIR} -o ./bin/gim_logicc_srv $(CMDDIR)/logic/main.go
+	GOOS=linux GOARCH=amd64 go build -trimpath -o ./bin/gim_logic_srv $(CMDDIR)/logic/main.go
 	#mkdir bin
 #	serverName=gim_logic_srv
 #    echo "build $(serverName) sta
@@ -30,7 +30,7 @@ build_logic:
 #  	GOOS=linux GOARCH=amd64 go build -o ./bin/${serverName} -ldflags "-w -X 'main.BuildGoVersion=${buildGoVersion}' -X 'main.BuildVersion=${buildVersion}' -X 'main.BuildTime=${buildTime}' -X 'main.BuildCommit=${buildCommit}'" $(CMDDIR)/logic/main.go;
 
 build_connect:
-	GOOS=linux GOARCH=amd64 go build -gcflags=-trimpath=${CMDDIR}-asmflags=-trimpath=${CMDDIR} -o ./bin/gim_connect_srv $(CMDDIR)/connect/main.go
+	GOOS=linux GOARCH=amd64 go build -trimpath -o ./bin/gim_connect_srv $(CMDDIR)/connect/main.go
 
 build_all:
 	make build_business

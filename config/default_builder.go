@@ -55,7 +55,7 @@ func (*defaultBuilder) Build() Configuration {
 		PushRoomSubscribeNum: 100,
 		PushAllSubscribeNum:  100,
 
-		// ConnectLocalAddr:     "172.31.6.248:40000",
+		ConnectLocalAddr:     fmt.Sprintf("%s%s", cfg.ConnectRPCListenHost, cfg.ConnectRPCListenPort),
 		ConnectRPCListenAddr: cfg.ConnectRPCListenPort,
 		ConnectTCPListenAddr: cfg.ConnectTCPListenAddr,
 		// ConnectWSListenAddr:  "172.31.6.248:40002",

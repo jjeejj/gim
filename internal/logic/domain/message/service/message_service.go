@@ -102,9 +102,9 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 		}
 	}
 	// 保存消息之后，推送消息到发送队列
-	nsqMessageByte, err := json.Marshal(NsgMessage{
-		message:  message,
-		toUserID: toUserID,
+	nsqMessageByte, err := json.Marshal(&NsgMessage{
+		Message:  message,
+		ToUserID: toUserID,
 	})
 	if err != nil {
 		logger.Sugar.Error(err)
@@ -114,6 +114,7 @@ func (*messageService) SendToUser(ctx context.Context, fromDeviceID int64, toUse
 	if err != nil {
 		logger.Logger.Error("snq push message err", zap.Error(err))
 	}
+	logger.Logger.Debug("snq push message success", zap.Any("nsq message", nsqMessageByte))
 	// // 查询用户在线设备
 	// devices, err := proxy.DeviceProxy.ListOnlineByUserId(ctx, toUserID)
 	// if err != nil {
