@@ -7,6 +7,8 @@ import "google/protobuf/empty.proto";
 service LogicExt {
   // 注册设备
   rpc RegisterDevice (RegisterDeviceReq) returns (RegisterDeviceResp);
+  // 注册设备
+  rpc GetDeviceById (GetDeviceByIdReq) returns (GetDeviceByIdResp);
 
   // 推送消息到房间
   rpc PushRoom(PushRoomReq)returns(google.protobuf.Empty);
@@ -52,6 +54,18 @@ message RegisterDeviceReq {
 }
 message RegisterDeviceResp {
   int64 device_id = 1; // 设备id
+}
+
+message GetDeviceByIdReq {
+  int64 device_id = 1; // 设备id
+}
+message GetDeviceByIdResp {
+  int64 device_id = 1; // 设备id
+  int32 type = 2; // 设备类型，1:Android；2：IOS；3：Windows; 4：MacOS；5：Web
+  string brand = 3; // 厂商
+  string model = 4; // 机型
+  string system_version = 5; // 系统版本
+  string sdk_version = 6; // sdk版本号
 }
 
 // TODO 这里应该有一个唯一的标识，防止同一条消息发送 2 次

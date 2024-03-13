@@ -28,6 +28,15 @@ func (*LogicExtServer) RegisterDevice(ctx context.Context, in *pb.RegisterDevice
 	return &pb.RegisterDeviceResp{DeviceId: deviceId}, err
 }
 
+func (*LogicExtServer) GetDeviceById(ctx context.Context, in *pb.GetDeviceByIdReq) (*pb.GetDeviceByIdResp, error) {
+	deviceInfo, err := device.App.GetDevice(ctx, in.DeviceId)
+	return &pb.GetDeviceByIdResp{
+		DeviceId: deviceInfo.DeviceId,
+		Type:     deviceInfo.Type,
+		Brand:    deviceInfo.Brand,
+	}, err
+}
+
 // PushRoom  推送房间
 func (s *LogicExtServer) PushRoom(ctx context.Context, req *pb.PushRoomReq) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, room.App.Push(ctx, req)
@@ -36,7 +45,7 @@ func (s *LogicExtServer) PushRoom(ctx context.Context, req *pb.PushRoomReq) (*em
 // SendMessageToFriend 发送好友消息
 // 返回的序列为：userID+seq
 func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessageReq) (*pb.SendMessageResp, error) {
-	logger.Logger.Debug("start send message:", zap.String("time", time.Now().String()))
+	logger.Logger.Debug("start send message:", zap.String("time", time.Now().String()), zap.Int64("send_time", in.SendTime))
 	userId, deviceId, err := grpclib.GetCtxData(ctx)
 	if err != nil {
 		return nil, err
@@ -46,7 +55,7 @@ func (*LogicExtServer) SendMessageToFriend(ctx context.Context, in *pb.SendMessa
 	if err != nil {
 		return nil, err
 	}
-	logger.Logger.Debug("end send message:", zap.String("time", time.Now().String()))
+	logger.Logger.Debug("end send message:", zap.String("time", time.Now().String()), zap.Int64("send_time", in.SendTime))
 	return &pb.SendMessageResp{
 		Seq:     seq,
 		UserSeq: fmt.Sprintf("%s_%d", userId, seq),

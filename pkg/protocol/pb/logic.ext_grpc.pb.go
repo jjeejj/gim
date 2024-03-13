@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	LogicExt_RegisterDevice_FullMethodName      = "/pb.LogicExt/RegisterDevice"
+	LogicExt_GetDeviceById_FullMethodName       = "/pb.LogicExt/GetDeviceById"
 	LogicExt_PushRoom_FullMethodName            = "/pb.LogicExt/PushRoom"
 	LogicExt_SendMessageToFriend_FullMethodName = "/pb.LogicExt/SendMessageToFriend"
 	LogicExt_AddFriend_FullMethodName           = "/pb.LogicExt/AddFriend"
@@ -44,6 +45,8 @@ const (
 type LogicExtClient interface {
 	// 注册设备
 	RegisterDevice(ctx context.Context, in *RegisterDeviceReq, opts ...grpc.CallOption) (*RegisterDeviceResp, error)
+	// 注册设备
+	GetDeviceById(ctx context.Context, in *GetDeviceByIdReq, opts ...grpc.CallOption) (*GetDeviceByIdResp, error)
 	// 推送消息到房间
 	PushRoom(ctx context.Context, in *PushRoomReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 发送好友消息
@@ -87,6 +90,15 @@ func NewLogicExtClient(cc grpc.ClientConnInterface) LogicExtClient {
 func (c *logicExtClient) RegisterDevice(ctx context.Context, in *RegisterDeviceReq, opts ...grpc.CallOption) (*RegisterDeviceResp, error) {
 	out := new(RegisterDeviceResp)
 	err := c.cc.Invoke(ctx, LogicExt_RegisterDevice_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *logicExtClient) GetDeviceById(ctx context.Context, in *GetDeviceByIdReq, opts ...grpc.CallOption) (*GetDeviceByIdResp, error) {
+	out := new(GetDeviceByIdResp)
+	err := c.cc.Invoke(ctx, LogicExt_GetDeviceById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -234,6 +246,8 @@ func (c *logicExtClient) GetGroupMembers(ctx context.Context, in *GetGroupMember
 type LogicExtServer interface {
 	// 注册设备
 	RegisterDevice(context.Context, *RegisterDeviceReq) (*RegisterDeviceResp, error)
+	// 注册设备
+	GetDeviceById(context.Context, *GetDeviceByIdReq) (*GetDeviceByIdResp, error)
 	// 推送消息到房间
 	PushRoom(context.Context, *PushRoomReq) (*emptypb.Empty, error)
 	// 发送好友消息
@@ -273,6 +287,9 @@ type UnimplementedLogicExtServer struct {
 
 func (UnimplementedLogicExtServer) RegisterDevice(context.Context, *RegisterDeviceReq) (*RegisterDeviceResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterDevice not implemented")
+}
+func (UnimplementedLogicExtServer) GetDeviceById(context.Context, *GetDeviceByIdReq) (*GetDeviceByIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeviceById not implemented")
 }
 func (UnimplementedLogicExtServer) PushRoom(context.Context, *PushRoomReq) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PushRoom not implemented")
@@ -346,6 +363,24 @@ func _LogicExt_RegisterDevice_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LogicExtServer).RegisterDevice(ctx, req.(*RegisterDeviceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LogicExt_GetDeviceById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LogicExtServer).GetDeviceById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LogicExt_GetDeviceById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LogicExtServer).GetDeviceById(ctx, req.(*GetDeviceByIdReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -630,6 +665,10 @@ var LogicExt_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterDevice",
 			Handler:    _LogicExt_RegisterDevice_Handler,
+		},
+		{
+			MethodName: "GetDeviceById",
+			Handler:    _LogicExt_GetDeviceById_Handler,
 		},
 		{
 			MethodName: "PushRoom",

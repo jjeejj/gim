@@ -34,6 +34,17 @@ func (*app) Register(ctx context.Context, in *pb.RegisterDeviceReq) (int64, erro
 	return device.Id, nil
 }
 
+// GetById 根据 id 获取设备
+// func (*app) GetById(ctx context.Context, in *pb.GetDeviceByIdReq) (*Device, error) {
+//     // 标记用户在设备上登录
+//     device, err := Repo.Get(in.DeviceId)
+//     if err != nil || device == nil {
+//         return nil, err
+//     }
+//
+//     return device, nil
+// }
+
 // SignIn 登录
 func (*app) SignIn(ctx context.Context, userId string, deviceId int64, token string, connAddr string, clientAddr string) error {
 	return Service.SignIn(ctx, userId, deviceId, token, connAddr, clientAddr)

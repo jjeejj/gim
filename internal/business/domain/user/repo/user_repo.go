@@ -1,10 +1,15 @@
 package repo
 
 import (
+	"strings"
+	"sync"
+
 	"gim/internal/business/domain/user/model"
 )
 
-type userRepo struct{}
+type userRepo struct {
+	sync sync.RWMutex
+}
 
 var UserRepo = new(userRepo)
 
@@ -50,7 +55,7 @@ func (*userRepo) Search(key string) ([]model.User, error) {
 func (*userRepo) Save(user *model.User) error {
 	userId := user.UserId
 	err := UserDao.Save(user)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "Duplicate entry") { // TODO 这里要更新 grom 库，进行错误判断
 		return err
 	}
 
