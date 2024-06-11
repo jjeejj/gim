@@ -113,7 +113,7 @@ func (c *Conn) HandleMessage(bytes []byte) {
 		logger.Logger.Error("unmarshal error", zap.Error(err), zap.Int("len", len(bytes)))
 		return
 	}
-	logger.Logger.Debug("HandleMessage", zap.Any("input", input), zap.String("data", string(input.Data)))
+	// logger.Logger.Debug("HandleMessage", zap.Any("input", input), zap.String("data", string(input.Data)))
 
 	// 对未登录的用户进行拦截
 	// if input.Type != pb.PackageType_PT_SIGN_IN && c.UserId == "" {
@@ -226,7 +226,7 @@ func (c *Conn) Sync(input *pb.Input) {
 // Heartbeat 心跳
 // 直接回复心跳信息
 func (c *Conn) Heartbeat(input *pb.Input) {
-	logger.Sugar.Infow("heartbeat", "device_id", c.DeviceId, "user_id", c.UserId)
+	// logger.Sugar.Debugf("heartbeat", "device_id", c.DeviceId, "user_id", c.UserId)
 	c.Send(pb.PackageType_PT_HEARTBEAT, input.RequestId, &pb.HeartbeatInput{
 		DeviceId: c.DeviceId,
 		UserId:   c.UserId,
