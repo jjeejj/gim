@@ -25,8 +25,8 @@ func StartTCPServer(addr string) {
 		gn.WithDecoder(codec.NewUvarintDecoder()),
 		gn.WithEncoder(codec.NewUvarintEncoder(4098)),
 		gn.WithReadBufferLen(4098),
-		gn.WithTimeout(11*time.Minute),
-		gn.WithAcceptGNum(50),
+		gn.WithTimeout(1*time.Minute),
+		gn.WithAcceptGNum(500),
 		gn.WithIOGNum(100))
 	if err != nil {
 		logger.Sugar.Error(err)

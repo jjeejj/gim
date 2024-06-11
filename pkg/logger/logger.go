@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	Level  = zap.InfoLevel
+	Level  = zap.DebugLevel
 	Target = File
 )
 
