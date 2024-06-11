@@ -41,7 +41,7 @@ func loadFileConfig() (*FileConfig, error) {
 
 func (*defaultBuilder) Build() Configuration {
 	logger.Level = zap.InfoLevel
-	logger.Target = logger.Console
+	logger.Target = logger.File
 
 	// 加载配置文件
 	cfg, err := loadFileConfig()

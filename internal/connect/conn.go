@@ -226,7 +226,7 @@ func (c *Conn) Sync(input *pb.Input) {
 // Heartbeat 心跳
 // 直接回复心跳信息
 func (c *Conn) Heartbeat(input *pb.Input) {
-	// logger.Sugar.Debugf("heartbeat", "device_id", c.DeviceId, "user_id", c.UserId)
+	// logger.Sugar.Infow("heartbeat", "device_id", c.DeviceId, "user_id", c.UserId)
 	c.Send(pb.PackageType_PT_HEARTBEAT, input.RequestId, &pb.HeartbeatInput{
 		DeviceId: c.DeviceId,
 		UserId:   c.UserId,

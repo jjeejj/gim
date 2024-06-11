@@ -15,8 +15,8 @@ const (
 )
 
 var (
-	Level  = zap.DebugLevel
-	Target = Console
+	Level  = zap.InfoLevel
+	Target = File
 )
 
 var (
@@ -47,7 +47,7 @@ func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 
 func init() {
 	w := zapcore.AddSync(&lumberjackv2.Logger{
-		Filename:   "log/im.log",
+		Filename:   "log/gim.log",
 		MaxSize:    1024, // megabytes
 		MaxBackups: 10,
 		MaxAge:     7, // days
