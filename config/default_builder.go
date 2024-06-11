@@ -40,7 +40,7 @@ func loadFileConfig() (*FileConfig, error) {
 }
 
 func (*defaultBuilder) Build() Configuration {
-	logger.Level = zap.DebugLevel
+	logger.Level = zap.InfoLevel
 	logger.Target = logger.Console
 
 	// 加载配置文件
